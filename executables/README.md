@@ -1,6 +1,11 @@
 # MQP_Project
 Tutorial para crear estos ficheros en funcion del sistema operativo.
 
+## Requerimiento
+   ```
+   pip install pyinstaller
+   ```
+
 ## Windows
 Próximamente...
 
