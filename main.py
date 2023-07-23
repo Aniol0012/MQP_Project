@@ -36,12 +36,12 @@ root.configure(bg='light grey')
 
 center_window(root, 800, 600)
 
-logo_image = Image.open("mqp.png")
+logo_image = Image.open("icons/mqp.png")
 photo = ImageTk.PhotoImage(logo_image)
 logo_label = tk.Label(root, image=photo, bg='light grey')
 logo_label.pack(anchor="center")
 
-root.iconbitmap('mqp.ico')
+root.iconbitmap('icons/mqp.ico')
 
 label1 = tk.Label(root, text="Número 1:", bg='light grey', font=('Helvetica', '10', 'bold'))
 label1.pack()
