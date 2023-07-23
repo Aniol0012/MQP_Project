@@ -8,8 +8,16 @@ Proyecto hecho con Tkinter para MasQueProyectores
     git clone https://github.com/Aniol0012/MQP_Project
     ```
     o descargar manualmente el fichero.
-   
-2. **Dentro de la carpeta ejecutar la aplicacion:**
+
+2. **Instalar dependencias:**
+   ```
+   pip install tkinter
+   ```
+   ```
+   pip install pillow
+   ```
+
+3. **Dentro de la carpeta ejecutar la aplicacion:**
    ```sh
    python3 main.py
    ```
