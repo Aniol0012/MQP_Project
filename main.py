@@ -52,16 +52,16 @@ logo_label.pack(anchor="center")
 root.iconbitmap('icons/mqp.ico')
 
 label1 = tk.Label(root, text="Introduce la medida en horizontal (x):", bg='light grey',
-                  font=('Helvetica', '10', 'bold'))
+                  font=('Helvetica', '14', 'bold'))
 label1.pack()
 
-entryX = tk.Entry(root, bd=2, width=25)
+entryX = tk.Entry(root, bd=2, width=30)
 entryX.pack()
 
-label2 = tk.Label(root, text="Introduce la medida en vertical (y):", bg='light grey', font=('Helvetica', '10', 'bold'))
+label2 = tk.Label(root, text="Introduce la medida en vertical (y):", bg='light grey', font=('Helvetica', '14', 'bold'))
 label2.pack()
 
-entryY = tk.Entry(root, bd=2, width=25)
+entryY = tk.Entry(root, bd=2, width=30)
 entryY.pack()
 
 button_frame = tk.Frame(root, bg='light grey')
@@ -73,7 +73,7 @@ clear_button.grid(row=0, column=0, padx=10)
 button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=10)
 button.grid(row=0, column=1)
 
-result_label = tk.Label(root, text="", bg='light grey')
+result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
 
 root.mainloop()
