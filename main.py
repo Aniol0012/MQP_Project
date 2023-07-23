@@ -1,25 +1,33 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import fractions
 
 
-def calculate():
+def calculate_aspect_ratio():
     try:
-        num1 = float(entry1.get())
-        num2 = float(entry2.get())
-        result = num1 + num2
-        update_result_label(result)
+        num1 = float(entryX.get())
+        num2 = float(entryY.get())
+        result = round(num1 / num2, 4)
+        fraction = fractions.Fraction(int(num1), int(num2))
+        if fraction.denominator == 1:
+            fraction_str = f"{fraction.numerator}:1"
+        else:
+            fraction_str = str(fraction).replace("/", ":")
+        update_result_label(f"La relación de aspecto es {fraction_str} ({result})")
     except ValueError:
         update_result_label("Se han introducido valores incorrectos")
+    except ZeroDivisionError:
+        update_result_label("No puedes dividir por 0")
 
 
 def clear():
-    entry1.delete(0, tk.END)
-    entry2.delete(0, tk.END)
+    entryX.delete(0, tk.END)
+    entryY.delete(0, tk.END)
     update_result_label("")
 
 
-def update_result_label(new_text):
-    result_label.config(text=f"Resultado: {new_text}")
+def update_result_label(text):
+    result_label.config(text=str(text))
 
 
 def center_window(root, width, height):
@@ -31,7 +39,7 @@ def center_window(root, width, height):
 
 
 root = tk.Tk()
-root.title("Calculadora de Suma")
+root.title("Calculador de aspect ratio")
 root.configure(bg='light grey')
 
 center_window(root, 800, 600)
@@ -43,17 +51,18 @@ logo_label.pack(anchor="center")
 
 root.iconbitmap('icons/mqp.ico')
 
-label1 = tk.Label(root, text="Número 1:", bg='light grey', font=('Helvetica', '10', 'bold'))
+label1 = tk.Label(root, text="Introduce la medida en horizontal (x):", bg='light grey',
+                  font=('Helvetica', '10', 'bold'))
 label1.pack()
 
-entry1 = tk.Entry(root, bd=2, width=25)
-entry1.pack()
+entryX = tk.Entry(root, bd=2, width=25)
+entryX.pack()
 
-label2 = tk.Label(root, text="Número 2:", bg='light grey', font=('Helvetica', '10', 'bold'))
+label2 = tk.Label(root, text="Introduce la medida en vertical (y):", bg='light grey', font=('Helvetica', '10', 'bold'))
 label2.pack()
 
-entry2 = tk.Entry(root, bd=2, width=25)
-entry2.pack()
+entryY = tk.Entry(root, bd=2, width=25)
+entryY.pack()
 
 button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(pady=10)
@@ -61,10 +70,10 @@ button_frame.pack(pady=10)
 clear_button = tk.Button(button_frame, text="Limpiar", command=clear, bg='orange', height=2, width=10)
 clear_button.grid(row=0, column=0, padx=10)
 
-button = tk.Button(button_frame, text="Calcular", command=calculate, bg='green', height=2, width=10)
+button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=10)
 button.grid(row=0, column=1)
 
-result_label = tk.Label(root, text="Resultado:", bg='light grey')
+result_label = tk.Label(root, text="", bg='light grey')
 result_label.pack()
 
 root.mainloop()
