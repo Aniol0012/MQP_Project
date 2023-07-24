@@ -7,7 +7,9 @@ Tutorial para crear estos ficheros en funcion del sistema operativo.
    ```
 
 ## Windows
-Próximamente...
+   ```
+   pyinstaller --onefile -w main.py
+   ```
 
 ## MacOS
 1. Copy the files to a folder named MyApp:
