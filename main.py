@@ -87,6 +87,7 @@ def get_division_by_zero_message():
 def clear():
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
+    rectangle.reset()
     update_result_label("")
 
 
@@ -106,7 +107,7 @@ root = tk.Tk()
 root.title("Calculador de aspect ratio")
 root.configure(bg='light grey')
 
-center_window(root, 800, 600)
+center_window(root, 800, 800)
 
 logo_image = Image.open("icons/mqp.png")
 photo = ImageTk.PhotoImage(logo_image)
@@ -148,5 +149,62 @@ button.grid(row=0, column=1)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
+
+
+class ResizableRectangle:
+    def __init__(self, canvas, x1, y1, x2, y2, **kwargs):
+        self.canvas = canvas
+        self.id = self.canvas.create_rectangle(x1, y1, x2, y2, **kwargs)
+        self.original_coords = (x1, y1, x2, y2)
+        self.canvas.tag_bind(self.id, '<Button-1>', self.on_press)
+        self.canvas.tag_bind(self.id, '<B1-Motion>', self.on_drag)
+        self.canvas.tag_bind(self.id, '<ButtonRelease-1>', self.on_release)
+        self.press = None
+        self.resizing = False
+
+    def on_press(self, event):
+        self.press = (event.x, event.y)
+        x1, y1, x2, y2 = self.get_coords()
+        if abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
+            self.resizing = True
+
+    def on_drag(self, event):
+        if self.resizing:
+            x1, y1, x2, y2 = self.get_coords()
+            self.canvas.coords(self.id, x1, y1, event.x, event.y)
+        else:
+            dx = event.x - self.press[0]
+            dy = event.y - self.press[1]
+            self.canvas.move(self.id, dx, dy)
+            self.press = (event.x, event.y)
+        self.update_aspect_ratio()
+
+    def on_release(self, event):
+        self.press = None
+        self.resizing = False
+        self.update_aspect_ratio()
+
+    def update_aspect_ratio(self):
+        x1, y1, x2, y2 = self.get_coords()
+        width = abs(x2 - x1)
+        height = abs(y2 - y1)
+        aspect_ratio = width / height if height != 0 else 0
+        aspect_ratio_label.config(text=f"Aspect Ratio: {aspect_ratio:.2f} ({width:.0f}:{height:.0f})")
+
+    def reset(self):
+        self.canvas.coords(self.id, *self.original_coords)
+        self.update_aspect_ratio()
+
+    def get_coords(self):
+        return self.canvas.coords(self.id)
+
+
+canvas = tk.Canvas(root, width=700, height=400, bg='light grey')
+canvas.pack()
+
+aspect_ratio_label = tk.Label(root, text="")
+aspect_ratio_label.pack()
+
+rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill='green', width=5)
 
 root.mainloop()
