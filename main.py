@@ -189,7 +189,12 @@ class ResizableRectangle:
         width = abs(x2 - x1)
         height = abs(y2 - y1)
         aspect_ratio = width / height if height != 0 else 0
-        aspect_ratio_label.config(text=f"Aspect Ratio: {aspect_ratio:.2f} ({width:.0f}:{height:.0f})")
+        fraction = fractions.Fraction(int(width), int(height))
+        if fraction.denominator == 1:
+            fraction_str = f"{fraction.numerator}:1"
+        else:
+            fraction_str = str(fraction).replace("/", ":")
+        aspect_ratio_label.config(text=get_aspect_ratio_message(fraction_str, aspect_ratio, width, height))
 
     def reset(self):
         self.canvas.coords(self.id, *self.original_coords)
@@ -197,6 +202,15 @@ class ResizableRectangle:
 
     def get_coords(self):
         return self.canvas.coords(self.id)
+
+
+def get_aspect_ratio_message(fraction_str, result, width, height):
+    if language == "en":
+        return f"The aspect ratio is {fraction_str} ({result:.2f}) - Width: {width:.0f} px, Height: {height:.0f} px"
+    elif language == "ca":
+        return f"La relació d'aspecte és {fraction_str} ({result:.2f}) - Amplada: {width:.0f} px, Alçada: {height:.0f} px"
+    else:
+        return f"La relación de aspecto es {fraction_str} ({result:.2f}) - Ancho: {width:.0f} px, Alto: {height:.0f} px"
 
 
 canvas = tk.Canvas(root, width=700, height=400, bg='light grey')
