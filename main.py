@@ -194,7 +194,7 @@ class ResizableRectangle:
             fraction_str = f"{fraction.numerator}:1"
         else:
             fraction_str = str(fraction).replace("/", ":")
-        aspect_ratio_label.config(text=get_aspect_ratio_message(fraction_str, aspect_ratio, width, height))
+        aspect_ratio_label.config(text=get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
 
     def reset(self):
         self.canvas.coords(self.id, *self.original_coords)
@@ -204,7 +204,7 @@ class ResizableRectangle:
         return self.canvas.coords(self.id)
 
 
-def get_aspect_ratio_message(fraction_str, result, width, height):
+def get_aspect_ratio_message2(fraction_str, result, width, height):
     if language == "en":
         return f"The aspect ratio is {fraction_str} ({result:.2f}) - Width: {width:.0f} px, Height: {height:.0f} px"
     elif language == "ca":
