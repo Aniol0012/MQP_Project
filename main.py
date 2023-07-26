@@ -267,6 +267,8 @@ def add_rectangle():
     color = random.choice(list(COLORS.values()))
     new_rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
+    global last_touched_rectangle
+    last_touched_rectangle = new_rectangle
 
 
 def remove_rectangle():
@@ -320,4 +322,7 @@ if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
                                    fill=COLORS[selected_color.get()], width=5)
 else:
     rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()], width=5)
+
+rectangles.append(rectangle)
+
 root.mainloop()
