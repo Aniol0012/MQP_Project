@@ -24,4 +24,4 @@ Proyecto hecho con Tkinter para MasQueProyectores
 
 ## Previsualización
 **V5 (MacOS)**
-![Previsualizacion](preview/preview_v5.png)
+![Previsualizacion](preview/preview_v6.png)
