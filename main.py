@@ -2,11 +2,18 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import fractions
 import random
+import config
 
 language = "es"
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 900
+WINDOW_WIDTH = config.WINDOW_WIDTH
+WINDOW_HEIGHT = config.WINDOW_HEIGHT
+CANVAS_WIDTH = config.CANVAS_WIDTH
+CANVAS_HEIGHT = config.CANVAS_HEIGHT
+RECTANGLE_WIDTH = config.RECTANGLE_WIDTH
+RECTANGLE_HEIGHT = config.RECTANGLE_HEIGHT
+LANGUAGES = config.LANGUAGES
+COLORS = config.COLORS
 
 
 def update_label(label, string):
@@ -126,13 +133,11 @@ logo_label.pack(anchor="center")
 
 root.iconbitmap('icons/mqp.ico')
 
-idiomas = ["Español", "Inglés", "Catalan"]
-
 idioma_seleccionado = tk.StringVar(root)
-idioma_seleccionado.set(idiomas[0])
+idioma_seleccionado.set(LANGUAGES[0])
 
 # Menú desplegable
-dropdown = tk.OptionMenu(root, idioma_seleccionado, *idiomas, command=switch_language)
+dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_language)
 dropdown.pack(anchor='nw', padx=30)
 
 label1 = tk.Label(root, text="Introduce la medida en horizontal (x):", bg='light grey',
@@ -259,7 +264,7 @@ rectangles = []
 
 
 def add_rectangle():
-    color = random.choice(list(colors.values()))
+    color = random.choice(list(COLORS.values()))
     new_rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
 
@@ -277,25 +282,22 @@ def remove_rectangle():
             pass
 
 
-colors = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
-
-
 def change_color(value):
     if last_touched_rectangle is not None:
-        last_touched_rectangle.set_fill_color(colors[value])
+        last_touched_rectangle.set_fill_color(COLORS[value])
 
 
 selected_color = tk.StringVar(root)
-selected_color.set(next(iter(colors)))
+selected_color.set(next(iter(COLORS)))
 
 selected_color = tk.StringVar(root)
-selected_color.set(next(iter(colors)))
+selected_color.set(next(iter(COLORS)))
 
 # Marco para los botones y el desplegable
 button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(anchor='nw', padx=30, pady=10)
 
-color_dropdown = tk.OptionMenu(button_frame, selected_color, *colors.keys(), command=change_color)
+color_dropdown = tk.OptionMenu(button_frame, selected_color, *COLORS.keys(), command=change_color)
 color_dropdown.grid(row=0, column=0, padx=10)
 
 add_rectangle_button = tk.Button(button_frame, text="Añadir rectángulo", command=add_rectangle, bg='#0EA7FF', height=2,
@@ -307,12 +309,15 @@ remove_rectangle_button = tk.Button(button_frame, text="Eliminar rectángulo", c
                                     width=15)
 remove_rectangle_button.grid(row=0, column=2)
 
-canvas = tk.Canvas(root, width=700, height=400, bg='light grey')
+canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg='light grey')
 canvas.pack(anchor='nw', padx=30)
 
 aspect_ratio_label = tk.Label(root, text="")
 aspect_ratio_label.pack()
 
-rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=colors[selected_color.get()], width=5)
-
+if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
+    rectangle = ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH, 50 + config.RECTANGLE_HEIGHT,
+                                   fill=COLORS[selected_color.get()], width=5)
+else:
+    rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()], width=5)
 root.mainloop()
