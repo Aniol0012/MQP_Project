@@ -47,7 +47,7 @@ def switch_language(value):
         language = "ca"
     else:
         language = "es"
-    clear()  # Clears all inputs before switching language
+    clear()
     update_language()
 
 
@@ -95,6 +95,10 @@ def get_division_by_zero_message():
         return "No puedes dividir por 0"
 
 
+rectangles = []
+last_touched_rectangle = None
+
+
 def clear():
     try:
         entryX.delete(0, tk.END)
@@ -103,7 +107,7 @@ def clear():
         update_result_label("")
         for rectangleCanvas in rectangles:
             rectangleCanvas.canvas.delete(rectangleCanvas.id)
-        rectangles.clear()
+            rectangles.remove(rectangleCanvas)
     except ValueError:
         pass
 
@@ -164,8 +168,6 @@ button.grid(row=0, column=1)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
-
-last_touched_rectangle = None
 
 
 class ResizableRectangle:
@@ -258,9 +260,6 @@ def get_aspect_ratio_message2(fraction_str, result, width, height):
         return f"La relació d'aspecte és {fraction_str} ({result:.2f}) - Amplada: {width:.0f} px, Alçada: {height:.0f} px"
     else:
         return f"La relación de aspecto es {fraction_str} ({result:.2f}) - Ancho: {width:.0f} px, Alto: {height:.0f} px"
-
-
-rectangles = []
 
 
 def add_rectangle():
