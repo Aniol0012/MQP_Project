@@ -12,6 +12,8 @@ CANVAS_HEIGHT = 400  # Default: 400
 RECTANGLE_WIDTH = 150  # Default: 150
 RECTANGLE_HEIGHT = 150  # Default 150
 
+ENABLE_ASPECT_RATIO_INPUT = True
+
 # Default language
 DEFAULT_LANGUAGE = "es"
 

@@ -18,6 +18,8 @@ RECTANGLE_HEIGHT = config.RECTANGLE_HEIGHT
 LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
+if config.ENABLE_ASPECT_RATIO_INPUT:
+    WINDOW_HEIGHT += 120
 
 def update_label(label, string):
     label.config(text=string)
@@ -112,6 +114,43 @@ root.iconbitmap("icons/mqp.ico")
 idioma_seleccionado = tk.StringVar(root)
 idioma_seleccionado.set(LANGUAGES[0])
 
+
+def insert_rectangle():
+    color = random.choice(list(COLORS.values()))
+    try:
+        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
+            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
+                                                                  50 + int(entryY.get()),
+                                                                  fill=color,
+                                                                  width=5)
+            rectangles.append(new_rectangle)
+
+            globals.last_touched_figure = new_rectangle
+            update_label(result_label, "")
+        else:
+            update_label(result_label, auxi.get_too_big_message())
+    except ValueError:
+        update_label(result_label, auxi.get_error_message())
+
+
+def insert_oval():
+    color = random.choice(list(COLORS.values()))
+    try:
+        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
+            new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + int(entryX.get()),
+                                                         50 + int(entryY.get()),
+                                                         fill=color,
+                                                         width=5)
+            rectangles.append(new_circle)
+
+            globals.last_touched_figure = new_circle
+            update_label(result_label, "")
+        else:
+            update_label(result_label, auxi.get_too_big_message())
+    except ValueError:
+        update_label(result_label, auxi.get_error_message())
+
+
 # Menú desplegable
 dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_language)
 dropdown.pack(anchor='nw', padx=30)
@@ -138,50 +177,12 @@ clear_button.grid(row=0, column=0)
 button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=15)
 button.grid(row=0, column=1, padx=10, pady=15)
 
-
-def insert_rectangle():
-    color = random.choice(list(COLORS.values()))
-    try:
-        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
-            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
-                                                                  50 + int(entryY.get()),
-                                                                  fill=color,
-                                                                  width=5)
-            rectangles.append(new_rectangle)
-
-            globals.last_touched_figure = new_rectangle
-            update_label(result_label, "")
-        else:
-            update_label(result_label, auxi.get_too_big_message())
-    except ValueError:
-        update_label(result_label, auxi.get_error_message())
-
-
-def insert_oval():
-    color = random.choice(list(COLORS.values()))
-    try:
-        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
-            new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + int(entryX.get()),
-                                                                  50 + int(entryY.get()),
-                                                                  fill=color,
-                                                                  width=5)
-            rectangles.append(new_circle)
-
-            globals.last_touched_figure = new_circle
-            update_label(result_label, "")
-        else:
-            update_label(result_label, auxi.get_too_big_message())
-    except ValueError:
-        update_label(result_label, auxi.get_error_message())
-
-
 insert_button = tk.Button(button_frame, text="Insertar Cuadrado", command=insert_rectangle, bg='yellow', height=2,
                           width=15)
 insert_button.grid(row=1, column=0, padx=10)
 
 insert_button = tk.Button(button_frame, text="Insertar Circulo", command=insert_oval, bg='orange', height=2, width=15)
 insert_button.grid(row=1, column=1, padx=10)
-
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
@@ -210,16 +211,18 @@ def calculate_remaining_value():
         update_label(result_label, auxi.get_error_message())
 
 
-labelRatio = tk.Label(root, text="Introduce la relación de aspecto (x:y):", bg='light grey',
-                      font=('Helvetica', '14', 'bold'))
-labelRatio.pack()
+if config.ENABLE_ASPECT_RATIO_INPUT:
+    labelRatio = tk.Label(root, text="Introduce la relación de aspecto (x:y):", bg='light grey',
+                          font=('Helvetica', '14', 'bold'))
+    labelRatio.pack()
 
-entryRatio = tk.Entry(root, bd=2, width=30)
-entryRatio.pack()
+    entryRatio = tk.Entry(root, bd=2, width=30)
+    entryRatio.pack()
 
-buttonRatio = tk.Button(root, text="Calcular valor restante", command=calculate_remaining_value, bg='green', height=2,
-                        width=20)
-buttonRatio.pack(pady=10)
+    buttonRatio = tk.Button(root, text="Calcular valor restante", command=calculate_remaining_value, bg='green',
+                            height=2,
+                            width=20)
+    buttonRatio.pack(pady=10)
 
 
 def add_circle():
