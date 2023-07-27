@@ -61,11 +61,11 @@ def calculate_aspect_ratio():
             fraction_str = f"{fraction.numerator}:1"
         else:
             fraction_str = str(fraction).replace("/", ":")
-        update_result_label(get_aspect_ratio_message(fraction_str, result))
+        update_label(result_label, get_aspect_ratio_message(fraction_str, result))
     except ValueError:
-        update_result_label(get_error_message())
+        update_label(result_label, get_error_message())
     except ZeroDivisionError:
-        update_result_label(get_division_by_zero_message())
+        update_label(result_label, get_division_by_zero_message())
 
 
 def get_aspect_ratio_message(fraction_str, result):
@@ -104,16 +104,12 @@ def clear():
         entryX.delete(0, tk.END)
         entryY.delete(0, tk.END)
         rectangle.reset()
-        update_result_label("")
+        update_label(result_label, "")
         for rectangleCanvas in rectangles:
             rectangleCanvas.canvas.delete(rectangleCanvas.id)
             rectangles.remove(rectangleCanvas)
     except ValueError:
         pass
-
-
-def update_result_label(text):
-    result_label.config(text=str(text))
 
 
 def center_window(root, width, height):
@@ -135,7 +131,7 @@ photo = ImageTk.PhotoImage(logo_image)
 logo_label = tk.Label(root, image=photo, bg='light grey')
 logo_label.pack(anchor="center")
 
-root.iconbitmap('icons/mqp.ico')
+root.iconbitmap("icons/mqp.ico")
 
 idioma_seleccionado = tk.StringVar(root)
 idioma_seleccionado.set(LANGUAGES[0])
@@ -164,7 +160,23 @@ clear_button = tk.Button(button_frame, text="Limpiar", command=clear, bg='orange
 clear_button.grid(row=0, column=0, padx=10)
 
 button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=10)
-button.grid(row=0, column=1)
+button.grid(row=0, column=1, padx=10)
+
+
+def insert_rectangle():
+    color = random.choice(list(COLORS.values()))
+    try:
+        new_rectangle = ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()), 50 + int(entryY.get()), fill=color,
+                                           width=5)
+        rectangles.append(new_rectangle)
+        global last_touched_rectangle
+        last_touched_rectangle = new_rectangle
+    except ValueError:
+        update_label(result_label, get_error_message())
+
+
+button = tk.Button(button_frame, text="Insertar", command=insert_rectangle, bg='yellow', height=2, width=10)
+button.grid(row=0, column=2)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()

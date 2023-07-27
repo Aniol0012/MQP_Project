@@ -5,10 +5,18 @@ Tutorial para crear estos ficheros en funcion del sistema operativo.
    ```
    pip install pyinstaller
    ```
+   
+   ```
+   pip install auto-py-to-exe
+   ```
 
 ## Windows
    ```
-   pyinstaller --onefile -w main.py
+   auto-py-to-exe
+   ```
+
+   ```
+   pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.ico" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.png;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/config.py;."  "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/main.py"
    ```
 
 ## MacOS
