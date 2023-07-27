@@ -3,8 +3,8 @@ from PIL import Image, ImageTk
 import fractions
 import random
 import config
-
-language = "es"
+import auxi
+import globals
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -12,7 +12,7 @@ CANVAS_WIDTH = config.CANVAS_WIDTH
 CANVAS_HEIGHT = config.CANVAS_HEIGHT
 RECTANGLE_WIDTH = config.RECTANGLE_WIDTH
 RECTANGLE_HEIGHT = config.RECTANGLE_HEIGHT
-LANGUAGES = config.LANGUAGES
+LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
 
@@ -21,32 +21,33 @@ def update_label(label, string):
 
 
 def update_language():
-    global label1, label2, button, clear_button
-    if language == "en":
+    if globals.language == "en":
         update_label(label1, "Enter the horizontal measure (x):")
         update_label(label2, "Enter the vertical measure (y):")
         update_label(button, "Calculate")
+        update_label(insert_button, "Insert")
         update_label(clear_button, "Clear")
-    elif language == "ca":
+    elif globals.language == "ca":
         update_label(label1, "Introdueix la mesura horitzontal (x):")
         update_label(label2, "Introdueix la mesura vertical (y):")
         update_label(button, "Calcular")
+        update_label(insert_button, "Introduïr")
         update_label(clear_button, "Netejar")
     else:
         update_label(label1, "Introduce la medida horizontal (x):")
         update_label(label2, "Introduce la medida vertical (y):")
         update_label(button, "Calcular")
+        update_label(insert_button, "Insertar")
         update_label(clear_button, "Limpiar")
 
 
 def switch_language(value):
-    global language
     if value == "Inglés":
-        language = "en"
+        globals.language = "en"
     elif value == "Catalan":
-        language = "ca"
+        globals.language = "ca"
     else:
-        language = "es"
+        globals.language = "es"
     clear()
     update_language()
 
@@ -61,38 +62,11 @@ def calculate_aspect_ratio():
             fraction_str = f"{fraction.numerator}:1"
         else:
             fraction_str = str(fraction).replace("/", ":")
-        update_label(result_label, get_aspect_ratio_message(fraction_str, result))
+        update_label(result_label, auxi.get_aspect_ratio_message(fraction_str, result))
     except ValueError:
-        update_label(result_label, get_error_message())
+        update_label(result_label, auxi.get_error_message())
     except ZeroDivisionError:
-        update_label(result_label, get_division_by_zero_message())
-
-
-def get_aspect_ratio_message(fraction_str, result):
-    if language == "en":
-        return f"The aspect ratio is {fraction_str} ({result})"
-    elif language == "ca":
-        return f"La relació d'aspecte és {fraction_str} ({result})"
-    else:
-        return f"La relación de aspecto es {fraction_str} ({result})"
-
-
-def get_error_message():
-    if language == "en":
-        return "Incorrect values have been entered"
-    elif language == "ca":
-        return "S'han introduït valors incorrectes"
-    else:
-        return "Se han introducido valores incorrectos"
-
-
-def get_division_by_zero_message():
-    if language == "en":
-        return "You can't divide by 0"
-    elif language == "ca":
-        return "No pots dividir per 0"
-    else:
-        return "No puedes dividir por 0"
+        update_label(result_label, auxi.get_division_by_zero_message())
 
 
 rectangles = []
@@ -157,26 +131,31 @@ button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(pady=10)
 
 clear_button = tk.Button(button_frame, text="Limpiar", command=clear, bg='orange', height=2, width=10)
-clear_button.grid(row=0, column=0, padx=10)
+clear_button.grid(row=0, column=0)
 
 button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=10)
-button.grid(row=0, column=1, padx=10)
+button.grid(row=0, column=1, padx=15)
 
 
 def insert_rectangle():
     color = random.choice(list(COLORS.values()))
     try:
-        new_rectangle = ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()), 50 + int(entryY.get()), fill=color,
-                                           width=5)
-        rectangles.append(new_rectangle)
-        global last_touched_rectangle
-        last_touched_rectangle = new_rectangle
+        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
+            new_rectangle = ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()), 50 + int(entryY.get()),
+                                               fill=color,
+                                               width=5)
+            rectangles.append(new_rectangle)
+            global last_touched_rectangle
+            last_touched_rectangle = new_rectangle
+            update_label(result_label, "")
+        else:
+            update_label(result_label, auxi.get_too_big_message())
     except ValueError:
-        update_label(result_label, get_error_message())
+        update_label(result_label, auxi.get_error_message())
 
 
-button = tk.Button(button_frame, text="Insertar", command=insert_rectangle, bg='yellow', height=2, width=10)
-button.grid(row=0, column=2)
+insert_button = tk.Button(button_frame, text="Insertar", command=insert_rectangle, bg='yellow', height=2, width=10)
+insert_button.grid(row=0, column=2)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
@@ -252,7 +231,7 @@ class ResizableRectangle:
                 fraction_str = f"{fraction.numerator}:1"
             else:
                 fraction_str = str(fraction).replace("/", ":")
-            aspect_ratio_label.config(text=get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+            aspect_ratio_label.config(text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
 
     def reset(self):
         self.canvas.coords(self.id, *self.original_coords)
@@ -263,15 +242,6 @@ class ResizableRectangle:
 
     def get_coords(self):
         return self.canvas.coords(self.id)
-
-
-def get_aspect_ratio_message2(fraction_str, result, width, height):
-    if language == "en":
-        return f"The aspect ratio is {fraction_str} ({result:.2f}) - Width: {width:.0f} px, Height: {height:.0f} px"
-    elif language == "ca":
-        return f"La relació d'aspecte és {fraction_str} ({result:.2f}) - Amplada: {width:.0f} px, Alçada: {height:.0f} px"
-    else:
-        return f"La relación de aspecto es {fraction_str} ({result:.2f}) - Ancho: {width:.0f} px, Alto: {height:.0f} px"
 
 
 def add_rectangle():

@@ -12,8 +12,8 @@ CANVAS_HEIGHT = 400  # Default: 400
 RECTANGLE_WIDTH = 150  # Default: 150
 RECTANGLE_HEIGHT = 150  # Default 150
 
-# Languages
-LANGUAGES = ["Español", "Inglés", "Catalan"]
+# Default language
+DEFAULT_LANGUAGE = "es"
 
 # Colors
 COLORS = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
