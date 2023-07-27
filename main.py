@@ -81,6 +81,7 @@ def clear():
     try:
         entryX.delete(0, tk.END)
         entryY.delete(0, tk.END)
+        entryRatio.delete(0, tk.END)
         rectangle.reset()
         update_label(result_label, "")
         for rectangleCanvas in rectangles:
@@ -279,7 +280,7 @@ add_rectangle_button.grid(row=0, column=1, padx=10)
 add_circle_button = tk.Button(button_frame, text="Añadir círculo", command=add_circle, bg='green', height=2, width=15)
 add_circle_button.grid(row=0, column=2, padx=10)
 
-remove_rectangle_button = tk.Button(button_frame, text="Eliminar rectángulo", command=remove_rectangle, bg='#F37D70',
+remove_rectangle_button = tk.Button(button_frame, text="Eliminar figura", command=remove_rectangle, bg='#F37D70',
                                     height=2,
                                     width=15)
 remove_rectangle_button.grid(row=0, column=3)
