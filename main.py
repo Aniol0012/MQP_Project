@@ -5,6 +5,7 @@ import random
 import config
 import auxi
 import globals
+import movment
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -70,7 +71,6 @@ def calculate_aspect_ratio():
 
 
 rectangles = []
-last_touched_rectangle = None
 
 
 def clear():
@@ -145,8 +145,8 @@ def insert_rectangle():
                                                fill=color,
                                                width=5)
             rectangles.append(new_rectangle)
-            global last_touched_rectangle
-            last_touched_rectangle = new_rectangle
+
+            globals.last_touched_figure = new_rectangle
             update_label(result_label, "")
         else:
             update_label(result_label, auxi.get_too_big_message())
@@ -173,8 +173,7 @@ class ResizableRectangle:
         self.resizing = False
 
     def on_press(self, event):
-        global last_touched_rectangle
-        last_touched_rectangle = self
+        globals.last_touched_figure = self
         self.press = (event.x, event.y)
         x1, y1, x2, y2 = self.get_coords()
         if abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
@@ -244,19 +243,110 @@ class ResizableRectangle:
         return self.canvas.coords(self.id)
 
 
+class ResizableCircle:
+    def __init__(self, canvas, x1, y1, x2, y2, **kwargs):
+        self.canvas = canvas
+        self.id = self.canvas.create_oval(x1, y1, x2, y2, **kwargs)
+        self.original_coords = (x1, y1, x2, y2)
+        self.canvas.tag_bind(self.id, '<Button-1>', self.on_press)
+        self.canvas.tag_bind(self.id, '<B1-Motion>', self.on_drag)
+        self.canvas.tag_bind(self.id, '<ButtonRelease-1>', self.on_release)
+        self.press = None
+        self.resizing = False
+
+    def on_press(self, event):
+
+        globals.last_touched_figure = self
+        self.press = (event.x, event.y)
+        x1, y1, x2, y2 = self.get_coords()
+        if abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
+            self.resizing = True
+
+    def on_drag(self, event):
+        if self.resizing:
+            x1, y1, x2, y2 = self.get_coords()
+            new_x2, new_y2 = event.x, event.y
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            if new_x2 < 0:
+                new_x2 = 0
+            elif new_x2 > canvas_width:
+                new_x2 = canvas_width
+            if new_y2 < 0:
+                new_y2 = 0
+            elif new_y2 > canvas_height:
+                new_y2 = canvas_height
+            self.canvas.coords(self.id, x1, y1, new_x2, new_y2)
+        else:
+            dx = event.x - self.press[0]
+            dy = event.y - self.press[1]
+            x1, y1, x2, y2 = self.get_coords()
+            new_x1, new_y1 = x1 + dx, y1 + dy
+            new_x2, new_y2 = x2 + dx, y2 + dy
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            if new_x1 < 0:
+                dx = -x1
+            elif new_x2 > canvas_width:
+                dx = canvas_width - x2
+            if new_y1 < 0:
+                dy = -y1
+            elif new_y2 > canvas_height:
+                dy = canvas_height - y2
+            self.canvas.move(self.id, dx, dy)
+            self.press = (event.x, event.y)
+        self.update_aspect_ratio()
+
+    def on_release(self, event):
+        self.press = None
+        self.resizing = False
+        self.update_aspect_ratio()
+
+    def update_aspect_ratio(self):
+        x1, y1, x2, y2 = self.get_coords()
+        width = abs(x2 - x1)
+        height = abs(y2 - y1)
+        if height != 0:
+            aspect_ratio = width / height if height != 0 else 0
+            fraction = fractions.Fraction(int(width), int(height))
+            if fraction.denominator == 1:
+                fraction_str = f"{fraction.numerator}:1"
+            else:
+                fraction_str = str(fraction).replace("/", ":")
+            aspect_ratio_label.config(text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+
+    def reset(self):
+        self.canvas.coords(self.id, *self.original_coords)
+        self.update_aspect_ratio()
+
+    def set_fill_color(self, color):
+        self.canvas.itemconfig(self.id, fill=color)
+
+    def get_coords(self):
+        return self.canvas.coords(self.id)
+
+
+def add_circle():
+    color = random.choice(list(COLORS.values()))
+    new_circle = ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    rectangles.append(new_circle)
+
+    globals.last_touched_figure = new_circle
+
+
 def add_rectangle():
     color = random.choice(list(COLORS.values()))
     new_rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
-    global last_touched_rectangle
-    last_touched_rectangle = new_rectangle
+
+    globals.last_touched_figure = new_rectangle
 
 
 def remove_rectangle():
     if rectangles:
         try:
-            if last_touched_rectangle is not None:
-                rectangle_to_remove = last_touched_rectangle
+            if globals.last_touched_figure is not None:
+                rectangle_to_remove = globals.last_touched_figure
             else:
                 rectangle_to_remove = rectangles[-1]
             rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
@@ -266,8 +356,8 @@ def remove_rectangle():
 
 
 def change_color(value):
-    if last_touched_rectangle is not None:
-        last_touched_rectangle.set_fill_color(COLORS[value])
+    if globals.last_touched_figure is not None:
+        globals.last_touched_figure.set_fill_color(COLORS[value])
 
 
 selected_color = tk.StringVar(root)
@@ -287,10 +377,13 @@ add_rectangle_button = tk.Button(button_frame, text="Añadir rectángulo", comma
                                  width=15)
 add_rectangle_button.grid(row=0, column=1, padx=10)
 
+add_circle_button = tk.Button(button_frame, text="Añadir círculo", command=add_circle, bg='green', height=2, width=15)
+add_circle_button.grid(row=0, column=2, padx=10)
+
 remove_rectangle_button = tk.Button(button_frame, text="Eliminar rectángulo", command=remove_rectangle, bg='#F37D70',
                                     height=2,
                                     width=15)
-remove_rectangle_button.grid(row=0, column=2)
+remove_rectangle_button.grid(row=0, column=3)
 
 canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg='light grey')
 canvas.pack(anchor='nw', padx=30)
@@ -305,5 +398,12 @@ else:
     rectangle = ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()], width=5)
 
 rectangles.append(rectangle)
+
+root.focus_set()
+
+root.bind('w', movment.move_up)
+root.bind('s', movment.move_down)
+root.bind('a', movment.move_left)
+root.bind('d', movment.move_right)
 
 root.mainloop()
