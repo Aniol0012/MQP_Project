@@ -1,10 +1,12 @@
 import fractions
 import auxi
+import globals
 
-class ResizableRectangle:
+
+class ResizableCircle:
     def __init__(self, canvas, x1, y1, x2, y2, **kwargs):
         self.canvas = canvas
-        self.id = self.canvas.create_rectangle(x1, y1, x2, y2, **kwargs)
+        self.id = self.canvas.create_oval(x1, y1, x2, y2, **kwargs)
         self.original_coords = (x1, y1, x2, y2)
         self.canvas.tag_bind(self.id, '<Button-1>', self.on_press)
         self.canvas.tag_bind(self.id, '<B1-Motion>', self.on_drag)
@@ -13,6 +15,7 @@ class ResizableRectangle:
         self.resizing = False
 
     def on_press(self, event):
+
         globals.last_touched_figure = self
         self.press = (event.x, event.y)
         x1, y1, x2, y2 = self.get_coords()
@@ -70,7 +73,8 @@ class ResizableRectangle:
                 fraction_str = f"{fraction.numerator}:1"
             else:
                 fraction_str = str(fraction).replace("/", ":")
-            aspect_ratio_label.config(text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+            globals.aspect_ratio_label.config(
+                text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
 
     def reset(self):
         self.canvas.coords(self.id, *self.original_coords)
