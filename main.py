@@ -143,9 +143,10 @@ def insert_rectangle():
     color = random.choice(list(COLORS.values()))
     try:
         if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
-            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()), 50 + int(entryY.get()),
-                                               fill=color,
-                                               width=5)
+            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
+                                                                  50 + int(entryY.get()),
+                                                                  fill=color,
+                                                                  width=5)
             rectangles.append(new_rectangle)
 
             globals.last_touched_figure = new_rectangle
@@ -161,7 +162,6 @@ insert_button.grid(row=0, column=2)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
-
 
 
 def add_circle():
@@ -230,10 +230,12 @@ globals.aspect_ratio_label = tk.Label(root, text="", bg='light gray')
 globals.aspect_ratio_label.pack()
 
 if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
-    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH, 50 + config.RECTANGLE_HEIGHT,
-                                   fill=COLORS[selected_color.get()], width=5)
+    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
+                                                      50 + config.RECTANGLE_HEIGHT,
+                                                      fill=COLORS[selected_color.get()], width=5)
 else:
-    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()], width=5)
+    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()],
+                                                      width=5)
 
 rectangles.append(rectangle)
 
