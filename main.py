@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import Image, ImageTk, ImageGrab
+from PIL import Image, ImageTk
 import fractions
 import random
 import config
@@ -109,6 +109,7 @@ center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 logo_image = Image.open("icons/mqp.png")
 photo = ImageTk.PhotoImage(logo_image)
+
 logo_label = tk.Label(root, image=photo, bg='light grey')
 logo_label.pack(anchor="center")
 
@@ -244,7 +245,7 @@ def add_rectangle():
     color = random.choice(list(COLORS.values()))
     if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
         new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
-                                                     50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
+                                                              50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
     else:
         new_rectangle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
@@ -291,6 +292,8 @@ def create_mirror_window():
 
     # Crea una nueva ventana
     globals.mirror_window = tk.Toplevel(root)
+
+    globals.mirror_window.title("")
 
     # Maximizamos la ventana
     globals.mirror_window.state('zoomed')
@@ -341,8 +344,8 @@ canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg=config.CAN
 canvas.pack(anchor='nw', padx=30, pady=10)
 
 # Crea un botón que crea una ventana espejo cuando se presiona
-button = tk.Button(root, text="Crear ventana espejo", command=create_mirror_window)
-button.pack()
+mirror_button = tk.Button(root, text="Crear ventana espejo", command=create_mirror_window)
+mirror_button.pack()
 
 globals.aspect_ratio_label = tk.Label(root, text="", bg='light gray')
 globals.aspect_ratio_label.pack()
