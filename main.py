@@ -37,7 +37,7 @@ def update_language():
         update_label(label1, "Introdueix la mesura horitzontal (x):")
         update_label(label2, "Introdueix la mesura vertical (y):")
         update_label(button, "Calcular")
-        update_label(insert_button, "Introduïr")
+        update_label(insert_button, "Introduir")
         update_label(clear_button, "Netejar")
     else:
         update_label(label1, "Introduce la medida horizontal (x):")

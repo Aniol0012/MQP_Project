@@ -1,4 +1,4 @@
-# Archivo de configuracion
+# Archivo de configuración
 
 # Dimensiones de la ventana
 WINDOW_WIDTH = 800  # Default: 800
@@ -8,11 +8,11 @@ WINDOW_HEIGHT = 1000  # Default: 900
 CANVAS_WIDTH = 700  # Default: 700
 CANVAS_HEIGHT = 400  # Default: 400
 
-# Dimensiones del rectangulo por defecto que deben de ser inferiores a las del canvas
+# Dimensiones del rectángulo por defecto que deben de ser inferiores a las del canvas
 RECTANGLE_WIDTH = 150  # Default: 150
 RECTANGLE_HEIGHT = 150  # Default 150
 
-# Dimensiones del circulo por defecto que deben de ser inferiores a las del canvas
+# Dimensiones del círculo por defecto que deben de ser inferiores a las del canvas
 CIRCLE_WIDTH = 150  # Default: 150
 CIRCLE_HEIGHT = 150  # Default 150
 

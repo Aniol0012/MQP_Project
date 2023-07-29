@@ -1,7 +1,7 @@
 # MQP_Project
 Proyecto hecho con Tkinter para MasQueProyectores
 
-## Instruciones
+## Instrucciones
 
 1. **Abrir una terminal (powershell, cmd, bash...) y copiar el repositorio:**
     ```sh 
@@ -17,11 +17,23 @@ Proyecto hecho con Tkinter para MasQueProyectores
    pip install pillow
    ```
 
-3. **Dentro de la carpeta ejecutar la aplicacion:**
+3. **Dentro del directorio ejecutar la aplicación:**
    ```sh
    python3 main.py
    ```
 
+## TECLAS
+
+Para mover las figuras, usa las siguientes teclas:
+
+- `W` Para mover hacia arriba
+- `A` Para mover hacia la izquierda
+- `S` Para mover hacia abajo
+- `D` Para mover hacia la derecha
+- `R` Para agrandar
+- `F` Para encoger
+
+
 ## Previsualización
-**V5 (MacOS)**
-![Previsualizacion](preview/preview_v6.png)
+**V8**
+![Previsualización](preview/preview_v8.png)

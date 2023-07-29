@@ -23,7 +23,7 @@ def get_too_big_message():
     if globals.language == "en":
         return "The introduced values are too big"
     elif globals.language == "ca":
-        return "Els valors intrdouïts són massa grans"
+        return "Els valors introduïts són massa grans"
     else:
         return "Los valores introducidos son demasiado grandes"
 
