@@ -359,9 +359,9 @@ else:
     rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color,
                                                       width=5)
 
-    rectangles.append(rectangle)
+rectangles.append(rectangle)
 
-    root.focus_set()
+root.focus_set()
 
 
 def disable_entries(event):
