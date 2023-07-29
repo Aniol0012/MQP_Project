@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageGrab
 import fractions
 import random
 import config
@@ -20,6 +20,7 @@ COLORS = config.COLORS
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
     WINDOW_HEIGHT += 120
+
 
 def update_label(label, string):
     label.config(text=string)
@@ -61,7 +62,7 @@ def calculate_aspect_ratio():
     try:
         num1 = float(entryX.get())
         num2 = float(entryY.get())
-        result = round(num1 / num2, 4)
+        result = round(num1 / num2, config.RESULT_DECIMAL_PRECISION)
         fraction = fractions.Fraction(int(num1), int(num2))
         if fraction.denominator == 1:
             fraction_str = f"{fraction.numerator}:1"
@@ -75,6 +76,7 @@ def calculate_aspect_ratio():
 
 
 rectangles = []
+ovals = []
 
 
 def clear():
@@ -101,7 +103,7 @@ def center_window(root, width, height):
 
 root = tk.Tk()
 root.title("Calculador de aspect ratio")
-root.configure(bg='light grey')
+root.configure(bg=config.BACKGROUND_COLOR)
 
 center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
 
@@ -142,7 +144,7 @@ def insert_oval():
                                                          50 + int(entryY.get()),
                                                          fill=color,
                                                          width=5)
-            rectangles.append(new_circle)
+            ovals.append(new_circle)
 
             globals.last_touched_figure = new_circle
             update_label(result_label, "")
@@ -228,18 +230,39 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
 
 def add_circle():
     color = random.choice(list(COLORS.values()))
-    new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
-    rectangles.append(new_circle)
+    if config.CIRCLE_WIDTH <= CANVAS_WIDTH and config.CIRCLE_HEIGHT <= CANVAS_HEIGHT:
+        new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + config.CIRCLE_WIDTH,
+                                                     50 + config.CIRCLE_HEIGHT, fill=color, width=5)
+    else:
+        new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    ovals.append(new_circle)
 
     globals.last_touched_figure = new_circle
 
 
 def add_rectangle():
     color = random.choice(list(COLORS.values()))
-    new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
+        new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
+                                                     50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
+    else:
+        new_rectangle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
 
     globals.last_touched_figure = new_rectangle
+
+
+def remove_oval():
+    if ovals:
+        try:
+            if globals.last_touched_figure is not None:
+                oval_to_remove = globals.last_touched_figure
+            else:
+                oval_to_remove = ovals[-1]
+            oval_to_remove.canvas.delete(oval_to_remove.id)
+            ovals.remove(oval_to_remove)
+        except ValueError:
+            pass
 
 
 def remove_rectangle():
@@ -253,11 +276,40 @@ def remove_rectangle():
             rectangles.remove(rectangle_to_remove)
         except ValueError:
             pass
+    else:
+        remove_oval()
 
 
 def change_color(value):
     if globals.last_touched_figure is not None:
         globals.last_touched_figure.set_fill_color(COLORS[value])
+
+
+def create_mirror_window():
+    if globals.mirror_window is not None:
+        globals.mirror_window.destroy()
+
+    # Crea una nueva ventana
+    globals.mirror_window = tk.Toplevel(root)
+
+    # Maximizamos la ventana
+    globals.mirror_window.state('zoomed')
+
+    globals.mirror_window.geometry(f'+{root.winfo_screenwidth() * config.SCREEN_TO_OPEN_MIRROR}+0')
+
+    mirror_canvas = tk.Canvas(globals.mirror_window, width=root.winfo_screenwidth(), height=root.winfo_screenheight(),
+                              bg='light grey')
+    mirror_canvas.pack(anchor='nw')
+
+    for rectangle in rectangles:
+        x1, y1, x2, y2 = canvas.coords(rectangle.id)
+        color = canvas.itemcget(rectangle.id, "fill")
+        ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+
+    for oval in ovals:
+        x1, y1, x2, y2 = canvas.coords(oval.id)
+        color = canvas.itemcget(oval.id, "fill")
+        ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
 
 
 selected_color = tk.StringVar(root)
@@ -285,23 +337,44 @@ remove_rectangle_button = tk.Button(button_frame, text="Eliminar figura", comman
                                     width=15)
 remove_rectangle_button.grid(row=0, column=3)
 
-canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg='light grey')
-canvas.pack(anchor='nw', padx=30)
+canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg=config.CANVAS_BACKGROUND_COLOR)
+canvas.pack(anchor='nw', padx=30, pady=10)
+
+# Crea un botón que crea una ventana espejo cuando se presiona
+button = tk.Button(root, text="Crear ventana espejo", command=create_mirror_window)
+button.pack()
 
 globals.aspect_ratio_label = tk.Label(root, text="", bg='light gray')
 globals.aspect_ratio_label.pack()
 
+color = random.choice(list(COLORS.values()))
 if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
     rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
                                                       50 + config.RECTANGLE_HEIGHT,
-                                                      fill=COLORS[selected_color.get()], width=5)
+                                                      fill=color, width=5)
 else:
-    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=COLORS[selected_color.get()],
+    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color,
                                                       width=5)
 
-rectangles.append(rectangle)
+    rectangles.append(rectangle)
 
-root.focus_set()
+    root.focus_set()
+
+
+def disable_entries(event):
+    entryX.config(state='disabled')
+    entryY.config(state='disabled')
+    entryRatio.config(state='disabled')
+
+
+def enable_entries(event):
+    entryX.config(state='normal')
+    entryY.config(state='normal')
+    entryRatio.config(state='normal')
+
+
+canvas.bind("<Enter>", disable_entries)
+canvas.bind("<Leave>", enable_entries)
 
 root.bind('w', movment.move_up)
 root.bind('s', movment.move_down)

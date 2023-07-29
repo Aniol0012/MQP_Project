@@ -7,7 +7,6 @@ class ResizableCircle:
     def __init__(self, canvas, x1, y1, x2, y2, **kwargs):
         self.canvas = canvas
         self.id = self.canvas.create_oval(x1, y1, x2, y2, **kwargs)
-        self.handle = self.canvas.create_oval(x2 - 5, y2 - 5, x2 + 5, y2 + 5, fill='red')
         self.original_coords = (x1, y1, x2, y2)
         self.canvas.tag_bind(self.id, '<Button-1>', self.on_press)
         self.canvas.tag_bind(self.id, '<B1-Motion>', self.on_drag)
@@ -27,7 +26,6 @@ class ResizableCircle:
         if self.resizing:
             x1, y1, x2, y2 = self.get_coords()
             new_x2, new_y2 = event.x, event.y
-            self.canvas.coords(self.handle, new_x2 - 5, new_y2 - 5, new_x2 + 5, new_y2 + 5)
             canvas_width = self.canvas.winfo_width()
             canvas_height = self.canvas.winfo_height()
             if new_x2 < 0:
@@ -45,7 +43,6 @@ class ResizableCircle:
             x1, y1, x2, y2 = self.get_coords()
             new_x1, new_y1 = x1 + dx, y1 + dy
             new_x2, new_y2 = x2 + dx, y2 + dy
-            self.canvas.move(self.handle, dx, dy)
             canvas_width = self.canvas.winfo_width()
             canvas_height = self.canvas.winfo_height()
             if new_x1 < 0:
@@ -67,7 +64,6 @@ class ResizableCircle:
 
     def update_aspect_ratio(self):
         x1, y1, x2, y2 = self.get_coords()
-        self.canvas.coords(self.handle, x2 - 5, y2 - 5, x2 + 5, y2 + 5)
         width = abs(x2 - x1)
         height = abs(y2 - y1)
         if height != 0:
@@ -81,9 +77,6 @@ class ResizableCircle:
                 text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
 
     def reset(self):
-        self.canvas.coords(self.id, *self.original_coords)
-        x1, y1, x2, y2 = self.get_coords()
-        self.canvas.coords(self.handle, x2 - 5, y2 - 5, x2 + 5, y2 + 5)
         self.canvas.coords(self.id, *self.original_coords)
         self.update_aspect_ratio()
 
