@@ -2,6 +2,15 @@ import config
 
 LANGUAGES = ["Español", "Inglés", "Catalan"]
 
+LANGUAGE_MAP = {
+    LANGUAGES[0]: "es",
+    LANGUAGES[1]: "en",
+    LANGUAGES[2]: "ca",
+}
+
+default_language_name = [name for name, code in LANGUAGE_MAP.items() if code == config.DEFAULT_LANGUAGE][0]
+
+
 last_touched_figure = None
 
 language = config.DEFAULT_LANGUAGE

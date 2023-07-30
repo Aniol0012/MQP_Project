@@ -1,33 +1,6 @@
 import globals
 
 
-def get_division_by_zero_message():
-    if globals.language == "en":
-        return "You can't divide by 0"
-    elif globals.language == "ca":
-        return "No pots dividir per 0"
-    else:
-        return "No puedes dividir por 0"
-
-
-def get_error_message():
-    if globals.language == "en":
-        return "Incorrect values have been entered"
-    elif globals.language == "ca":
-        return "S'han introduït valors incorrectes"
-    else:
-        return "Se han introducido valores incorrectos"
-
-
-def get_too_big_message():
-    if globals.language == "en":
-        return "The introduced values are too big"
-    elif globals.language == "ca":
-        return "Els valors introduïts són massa grans"
-    else:
-        return "Los valores introducidos son demasiado grandes"
-
-
 def get_aspect_ratio_message(fraction_str, result):
     if globals.language == "en":
         return f"The aspect ratio is {fraction_str} ({result})"

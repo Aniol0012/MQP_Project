@@ -32,7 +32,7 @@ RESULT_DECIMAL_PRECISION = 2  # Default: 2
 SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
 
 # Idioma predefinido
-DEFAULT_LANGUAGE = "es"
+DEFAULT_LANGUAGE = "ca"
 
 # Colores
 COLORS = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}

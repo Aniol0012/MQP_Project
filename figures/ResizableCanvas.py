@@ -7,11 +7,14 @@ class ResizableCanvas(tk.Canvas):
         super().__init__(master, **kwargs)
         self.bind("<Button-1>", self.on_press)
         self.bind("<B1-Motion>", self.on_drag)
+        self.bind("<ButtonRelease-1>", self.on_release)
         self.bind("<Configure>", self.on_resize)
         self.press = None
         self.resizing = False
         if config.SHOW_RED_DOT_CANVAS:
             self.resize_indicator = self.create_oval(190, 190, 200, 200, fill='red')
+        else:
+            self.resize_indicator = self.create_oval(190, 190, 200, 200, outline=config.CANVAS_BACKGROUND_COLOR)
 
     def on_press(self, event):
         self.press = (event.x, event.y)
@@ -29,6 +32,9 @@ class ResizableCanvas(tk.Canvas):
                 new_height = 0
             self.config(width=new_width, height=new_height)
         self.press = (event.x, event.y)
+
+    def on_release(self, event):
+        self.resizing = False
 
     def on_resize(self, event):
         width = self.winfo_width()

@@ -9,6 +9,7 @@ import movment
 from figures import ResizableRectangle
 from figures import ResizableCircle
 from figures import ResizableCanvas
+import importlib
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -27,36 +28,40 @@ def update_label(label, string):
     label.config(text=string)
 
 
-def update_language():
-    if globals.language == "en":
-        update_label(label1, "Enter the horizontal measure (x):")
-        update_label(label2, "Enter the vertical measure (y):")
-        update_label(button, "Calculate")
-        update_label(insert_button, "Insert")
-        update_label(clear_button, "Clear")
-    elif globals.language == "ca":
-        update_label(label1, "Introdueix la mesura horitzontal (x):")
-        update_label(label2, "Introdueix la mesura vertical (y):")
-        update_label(button, "Calcular")
-        update_label(insert_button, "Introduir")
-        update_label(clear_button, "Netejar")
-    else:
-        update_label(label1, "Introduce la medida horizontal (x):")
-        update_label(label2, "Introduce la medida vertical (y):")
-        update_label(button, "Calcular")
-        update_label(insert_button, "Insertar")
-        update_label(clear_button, "Limpiar")
+def load_translations(language):
+    global translations
+    translations_module = importlib.import_module(f"locales.{language}")
+    translations = translations_module.translations
 
 
 def switch_language(value):
+    global translations
     if value == "Inglés":
         globals.language = "en"
     elif value == "Catalan":
         globals.language = "ca"
     else:
         globals.language = "es"
+    load_translations(globals.language)
     clear()
     update_language()
+    root.title(get_title())
+
+
+def update_language():
+    update_label(label1, translations["enter_horizontal"])
+    update_label(label2, translations["enter_vertical"])
+    update_label(button, translations["calculate"])
+    update_label(insert_rectangle_bt, translations["insert_rectangle"])
+    update_label(insert_oval_bt, translations["insert_oval"])
+    update_label(clear_button, translations["clear"])
+    update_label(add_rectangle_bt, translations["add_rect"])
+    update_label(add_circle_bt, translations["add_oval"])
+    update_label(remove_figure_bt, translations["del_fig"])
+    update_label(buttonRatio, translations["calc_rest_value"])
+
+
+load_translations(globals.language)
 
 
 def calculate_aspect_ratio():
@@ -71,9 +76,9 @@ def calculate_aspect_ratio():
             fraction_str = str(fraction).replace("/", ":")
         update_label(result_label, auxi.get_aspect_ratio_message(fraction_str, result))
     except ValueError:
-        update_label(result_label, auxi.get_error_message())
+        update_label(result_label, translations["err_msg"])
     except ZeroDivisionError:
-        update_label(result_label, auxi.get_division_by_zero_message())
+        update_label(result_label, translations["no_divide_zero"])
 
 
 rectangles = []
@@ -91,6 +96,7 @@ def clear():
             rectangleCanvas.canvas.delete(rectangleCanvas.id)
             rectangles.remove(rectangleCanvas)
         clear_mirror_canvas()
+        update_label(result_label, "")
     except ValueError:
         pass
 
@@ -110,8 +116,19 @@ def center_window(root, width, height):
     root.geometry(f"{width}x{height}+{position_right}+{position_top}")
 
 
+def get_title():
+    if globals.language == "es":
+        return "Calculadora de relación de aspecto"
+    elif globals.language == "en":
+        return "Aspect ratio calculator"
+    elif globals.language == "ca":
+        return "Calculadora de relació d'aspecte"
+    else:
+        return "Idioma no valido"
+
+
 root = tk.Tk()
-root.title("Calculador de aspect ratio")
+root.title(get_title())
 root.configure(bg=config.BACKGROUND_COLOR)
 
 center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -125,7 +142,7 @@ logo_label.pack(anchor="center")
 root.iconbitmap("icons/mqp.ico")
 
 idioma_seleccionado = tk.StringVar(root)
-idioma_seleccionado.set(LANGUAGES[0])
+idioma_seleccionado.set(globals.default_language_name)
 
 
 def insert_rectangle():
@@ -142,9 +159,9 @@ def insert_rectangle():
             globals.last_touched_figure = new_rectangle
             update_label(result_label, "")
         else:
-            update_label(result_label, auxi.get_too_big_message())
+            update_label(result_label, translations["too_big_message"])
     except ValueError:
-        update_label(result_label, auxi.get_error_message())
+        update_label(result_label, translations["err_msg"])
 
 
 def insert_oval():
@@ -160,23 +177,23 @@ def insert_oval():
             globals.last_touched_figure = new_circle
             update_label(result_label, "")
         else:
-            update_label(result_label, auxi.get_too_big_message())
+            update_label(result_label, translations["too_big_message"])
     except ValueError:
-        update_label(result_label, auxi.get_error_message())
+        update_label(result_label, translations["err_msg"])
 
 
 # Menú desplegable
 dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_language)
 dropdown.pack(anchor='nw', padx=30)
 
-label1 = tk.Label(root, text="Introduce la medida en horizontal (x):", bg='light grey',
+label1 = tk.Label(root, text=translations["enter_horizontal"], bg='light grey',
                   font=('Helvetica', '14', 'bold'))
 label1.pack()
 
 entryX = tk.Entry(root, bd=2, width=30)
 entryX.pack()
 
-label2 = tk.Label(root, text="Introduce la medida en vertical (y):", bg='light grey', font=('Helvetica', '14', 'bold'))
+label2 = tk.Label(root, text=translations["enter_vertical"], bg='light grey', font=('Helvetica', '14', 'bold'))
 label2.pack()
 
 entryY = tk.Entry(root, bd=2, width=30)
@@ -185,18 +202,19 @@ entryY.pack()
 button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(pady=10)
 
-clear_button = tk.Button(button_frame, text="Limpiar", command=clear, bg='orange', height=2, width=15)
+clear_button = tk.Button(button_frame, text=translations["clear"], command=clear, bg='orange', height=2, width=15)
 clear_button.grid(row=0, column=0)
 
-button = tk.Button(button_frame, text="Calcular", command=calculate_aspect_ratio, bg='green', height=2, width=15)
+button = tk.Button(button_frame, text=translations["calculate"], command=calculate_aspect_ratio, bg='green', height=2,
+                   width=15)
 button.grid(row=0, column=1, padx=10, pady=15)
 
-insert_button = tk.Button(button_frame, text="Insertar Cuadrado", command=insert_rectangle, bg='yellow', height=2,
-                          width=15)
-insert_button.grid(row=1, column=0, padx=10)
+insert_rectangle_bt = tk.Button(button_frame, text="Insertar Cuadrado", command=insert_rectangle, bg='yellow', height=2,
+                                width=15)
+insert_rectangle_bt.grid(row=1, column=0, padx=10)
 
-insert_button = tk.Button(button_frame, text="Insertar Circulo", command=insert_oval, bg='orange', height=2, width=15)
-insert_button.grid(row=1, column=1, padx=10)
+insert_oval_bt = tk.Button(button_frame, text="Insertar Circulo", command=insert_oval, bg='orange', height=2, width=15)
+insert_oval_bt.grid(row=1, column=1, padx=10)
 
 result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
 result_label.pack()
@@ -218,22 +236,22 @@ def calculate_remaining_value():
                 entryX.delete(0, tk.END)
                 entryX.insert(0, str(x))
             else:
-                update_label(result_label, "Por favor, introduce un valor para X o Y.")
+                update_label(result_label, translations["intr_X_Y_value"])
         else:
-            update_label(result_label, "Por favor, introduce una relación de aspecto válida.")
+            update_label(result_label, translations["valid_aspect_ratio"])
     except ValueError:
-        update_label(result_label, auxi.get_error_message())
+        update_label(result_label, translations["err_msg"])
 
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
-    labelRatio = tk.Label(root, text="Introduce la relación de aspecto (x:y):", bg='light grey',
+    labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg='light grey',
                           font=('Helvetica', '14', 'bold'))
     labelRatio.pack()
 
     entryRatio = tk.Entry(root, bd=2, width=30)
     entryRatio.pack()
 
-    buttonRatio = tk.Button(root, text="Calcular valor restante", command=calculate_remaining_value, bg='green',
+    buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='green',
                             height=2,
                             width=20)
     buttonRatio.pack(pady=10)
@@ -354,17 +372,18 @@ button_frame.pack(anchor='nw', padx=30, pady=10)
 color_dropdown = tk.OptionMenu(button_frame, selected_color, *COLORS.keys(), command=change_color)
 color_dropdown.grid(row=0, column=0, padx=10)
 
-add_rectangle_button = tk.Button(button_frame, text="Añadir rectángulo", command=add_rectangle, bg='#0EA7FF', height=2,
-                                 width=15)
-add_rectangle_button.grid(row=0, column=1, padx=10)
+add_rectangle_bt = tk.Button(button_frame, text=translations["add_rect"], command=add_rectangle, bg='#0EA7FF', height=2,
+                             width=15)
+add_rectangle_bt.grid(row=0, column=1, padx=10)
 
-add_circle_button = tk.Button(button_frame, text="Añadir círculo", command=add_circle, bg='green', height=2, width=15)
-add_circle_button.grid(row=0, column=2, padx=10)
+add_circle_bt = tk.Button(button_frame, text=translations["add_oval"], command=add_circle, bg='green', height=2,
+                          width=15)
+add_circle_bt.grid(row=0, column=2, padx=10)
 
-remove_rectangle_button = tk.Button(button_frame, text="Eliminar figura", command=remove_rectangle, bg='#F37D70',
-                                    height=2,
-                                    width=15)
-remove_rectangle_button.grid(row=0, column=3)
+remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command=remove_rectangle, bg='#F37D70',
+                             height=2,
+                             width=15)
+remove_figure_bt.grid(row=0, column=3)
 
 canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
                                          bg=config.CANVAS_BACKGROUND_COLOR)
