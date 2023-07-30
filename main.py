@@ -128,7 +128,7 @@ def insert_rectangle():
                                                                   fill=color,
                                                                   width=5)
             rectangles.append(new_rectangle)
-            create_mirror_rectangle(new_rectangle)
+            create_mirror_rectangle(new_rectangle, color)
 
             globals.last_touched_figure = new_rectangle
             update_label(result_label, "")
@@ -250,6 +250,7 @@ def add_rectangle():
     else:
         new_rectangle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
+    create_mirror_rectangle(new_rectangle, color)
 
     globals.last_touched_figure = new_rectangle
 
@@ -276,6 +277,9 @@ def remove_rectangle():
                 rectangle_to_remove = rectangles[-1]
             rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
             rectangles.remove(rectangle_to_remove)
+            # Remove mirror rectangle
+            for mirror_rectangle in rectangle_to_remove.mirror_figures:
+                mirror_rectangle.canvas.delete(mirror_rectangle.id)
         except ValueError:
             pass
     else:
@@ -285,6 +289,11 @@ def remove_rectangle():
 def change_color(value):
     if globals.last_touched_figure is not None:
         globals.last_touched_figure.set_fill_color(COLORS[value])
+
+    if globals.mirror_window is not None:
+        for mirror_figure in globals.last_touched_figure.mirror_figures:
+            color = canvas.itemcget(rectangle.id, "fill")
+            mirror_figure.canvas.itemconfig(mirror_figure.id, fill=color)
 
 
 def create_mirror_window():
@@ -313,12 +322,12 @@ def create_mirror_window():
         ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
 
 
-def create_mirror_rectangle(new_rectangle):
+def create_mirror_rectangle(new_rectangle, color):
     if globals.mirror_window is not None:
         mirror_canvas = globals.mirror_window.winfo_children()[0]
-        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, 50, 50, 50 + int(entryX.get()),
-                                                                 50 + int(entryY.get()),
-                                                                 fill=color,
+        x = int(entryX.get()) if entryX.get() else config.RECTANGLE_WIDTH
+        y = int(entryY.get()) if entryY.get() else config.RECTANGLE_HEIGHT
+        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, 50, 50, 50 + x, 50 + y, fill=color,
                                                                  width=5)
         new_rectangle.mirror_figures.append(mirror_rectangle)
 
