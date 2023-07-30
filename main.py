@@ -1,4 +1,6 @@
 import tkinter as tk
+import os
+import sys
 from PIL import Image, ImageTk
 import fractions
 import random
@@ -23,6 +25,18 @@ COLORS = config.COLORS
 if config.ENABLE_ASPECT_RATIO_INPUT:
     WINDOW_HEIGHT += 120
 
+
+# Comprueba si estamos ejecutando el archivo .exe
+if getattr(sys, 'frozen', False):
+    # Estamos ejecutando el archivo .exe
+    application_path = sys._MEIPASS
+else:
+    # Estamos ejecutando el script .py
+    application_path = os.path.dirname(os.path.abspath(__file__))
+
+# Construye la ruta del archivo
+logo_image_path = os.path.join(application_path, 'icons/mqp.png')
+icon_path = os.path.join(application_path, 'icons/mqp.ico')
 
 def update_label(label, string):
     label.config(text=string)
@@ -133,13 +147,13 @@ root.configure(bg=config.BACKGROUND_COLOR)
 
 center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
 
-logo_image = Image.open("icons/mqp.png")
+logo_image = Image.open(logo_image_path)
 photo = ImageTk.PhotoImage(logo_image)
 
 logo_label = tk.Label(root, image=photo, bg='light grey')
 logo_label.pack(anchor="center")
 
-root.iconbitmap("icons/mqp.ico")
+root.iconbitmap(icon_path)
 
 idioma_seleccionado = tk.StringVar(root)
 idioma_seleccionado.set(globals.default_language_name)
@@ -390,6 +404,7 @@ canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS
 canvas.pack(anchor='nw', padx=30, pady=10)
 
 # Crea un botón que crea una ventana espejo cuando se presiona
+# TODO Cambiar el idioma a este boton
 mirror_button = tk.Button(root, text="Crear ventana espejo", command=create_mirror_window)
 mirror_button.pack()
 
