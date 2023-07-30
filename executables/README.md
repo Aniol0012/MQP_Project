@@ -16,7 +16,7 @@ Tutorial para crear estos ficheros en funcion del sistema operativo.
    ```
 
    ```
-   pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.ico" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.png;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/config.py;."  "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/main.py"
+   pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.ico" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons;icons/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/figures;figures/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/locales;locales/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/auxi.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/config.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/globals.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/movment.py;."  "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/main.py"
    ```
 
 ## MacOS
