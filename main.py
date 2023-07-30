@@ -22,21 +22,19 @@ RECTANGLE_HEIGHT = config.RECTANGLE_HEIGHT
 LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
+toggle_button = None
+
 if config.ENABLE_ASPECT_RATIO_INPUT:
     WINDOW_HEIGHT += 120
 
-
-# Comprueba si estamos ejecutando el archivo .exe
 if getattr(sys, 'frozen', False):
-    # Estamos ejecutando el archivo .exe
     application_path = sys._MEIPASS
 else:
-    # Estamos ejecutando el script .py
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-# Construye la ruta del archivo
 logo_image_path = os.path.join(application_path, 'icons/mqp.png')
 icon_path = os.path.join(application_path, 'icons/mqp.ico')
+
 
 def update_label(label, string):
     label.config(text=string)
@@ -73,6 +71,7 @@ def update_language():
     update_label(add_circle_bt, translations["add_oval"])
     update_label(remove_figure_bt, translations["del_fig"])
     update_label(buttonRatio, translations["calc_rest_value"])
+    update_label(toggle_button, translations["absolute_pos"])
 
 
 load_translations(globals.language)
@@ -362,6 +361,8 @@ def create_mirror_window():
         color = canvas.itemcget(oval.id, "fill")
         ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
 
+    create_toggle()
+
 
 def create_mirror_rectangle(new_rectangle, color):
     if globals.mirror_window is not None:
@@ -372,6 +373,15 @@ def create_mirror_rectangle(new_rectangle, color):
                                                                  width=5)
         new_rectangle.mirror_figures.append(mirror_rectangle)
 
+
+def toggle_bt():
+    if not globals.ENABLE_RELATIVE_POSITION:
+        globals.ENABLE_RELATIVE_POSITION = True
+    else:
+        globals.ENABLE_RELATIVE_POSITION = False
+
+
+button_var = tk.IntVar()
 
 selected_color = tk.StringVar(root)
 selected_color.set(next(iter(COLORS)))
@@ -398,6 +408,14 @@ remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command
                              height=2,
                              width=15)
 remove_figure_bt.grid(row=0, column=3)
+
+
+def create_toggle():
+    global toggle_button
+    toggle_button = tk.Checkbutton(button_frame, text=translations["absolute_pos"], variable=button_var,
+                                   command=toggle_bt, onvalue=1, offvalue=0, height=2, width=15, bg='purple')
+    toggle_button.grid(row=0, column=4, padx=10)
+
 
 canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
                                          bg=config.CANVAS_BACKGROUND_COLOR)

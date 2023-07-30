@@ -15,5 +15,5 @@ translations = {
     "no_divide_zero": "You can't divide by 0",
     "err_msg": "Incorrect values have been introduced",
     "too_big_message": "The introduced values are too big",
-
+    "absolute_pos": "Absolute position",
 }

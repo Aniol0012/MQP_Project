@@ -15,4 +15,5 @@ translations = {
     "no_divide_zero": "No pots dividir per 0",
     "err_msg": "S'han introduït valors incorrectes",
     "too_big_message": "Els valors introduïts són massa grans",
+    "absolute_pos": "Posició absoluta",
 }

@@ -19,9 +19,6 @@ CIRCLE_HEIGHT = 150  # Default 150
 # Añadir una relacion de aspecto debajo de los cuadrados
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 
-# Hacer la ventana espejo con posicion relativa
-ENABLE_RELATIVE_POSITION = True  # Default: True
-
 # Mostrar un punto rojo en la esquina inferior derecha del canvas para redimensionarlo
 SHOW_RED_DOT_CANVAS = True  # Default: True
 
@@ -31,8 +28,8 @@ RESULT_DECIMAL_PRECISION = 2  # Default: 2
 # En que pantalla se debe abrir la pantalla espejo
 SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
 
-# Idioma predefinido
-DEFAULT_LANGUAGE = "ca"
+# Idioma predefinido ["es", "en", "ca"]
+DEFAULT_LANGUAGE = "es"
 
 # Colores
 COLORS = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
