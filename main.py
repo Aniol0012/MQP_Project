@@ -128,6 +128,7 @@ def insert_rectangle():
                                                                   fill=color,
                                                                   width=5)
             rectangles.append(new_rectangle)
+            create_mirror_rectangle(new_rectangle)
 
             globals.last_touched_figure = new_rectangle
             update_label(result_label, "")
@@ -290,14 +291,10 @@ def create_mirror_window():
     if globals.mirror_window is not None:
         globals.mirror_window.destroy()
 
-    # Crea una nueva ventana
+    # Config de la nueva ventana
     globals.mirror_window = tk.Toplevel(root)
-
     globals.mirror_window.title("")
-
-    # Maximizamos la ventana
     globals.mirror_window.state('zoomed')
-
     globals.mirror_window.geometry(f'+{root.winfo_screenwidth() * config.SCREEN_TO_OPEN_MIRROR}+0')
 
     mirror_canvas = tk.Canvas(globals.mirror_window, width=root.winfo_screenwidth(), height=root.winfo_screenheight(),
@@ -307,12 +304,23 @@ def create_mirror_window():
     for rectangle in rectangles:
         x1, y1, x2, y2 = canvas.coords(rectangle.id)
         color = canvas.itemcget(rectangle.id, "fill")
-        ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        rectangle.mirror_figures.append(mirror_rectangle)
 
     for oval in ovals:
         x1, y1, x2, y2 = canvas.coords(oval.id)
         color = canvas.itemcget(oval.id, "fill")
         ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+
+
+def create_mirror_rectangle(new_rectangle):
+    if globals.mirror_window is not None:
+        mirror_canvas = globals.mirror_window.winfo_children()[0]
+        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, 50, 50, 50 + int(entryX.get()),
+                                                                 50 + int(entryY.get()),
+                                                                 fill=color,
+                                                                 width=5)
+        new_rectangle.mirror_figures.append(mirror_rectangle)
 
 
 selected_color = tk.StringVar(root)

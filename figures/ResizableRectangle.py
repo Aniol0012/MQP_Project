@@ -13,6 +13,7 @@ class ResizableRectangle:
         self.canvas.tag_bind(self.id, '<ButtonRelease-1>', self.on_release)
         self.press = None
         self.resizing = False
+        self.mirror_figures = []
 
     def on_press(self, event):
         globals.last_touched_figure = self
@@ -55,11 +56,17 @@ class ResizableRectangle:
             self.canvas.move(self.id, dx, dy)
             self.press = (event.x, event.y)
         self.update_aspect_ratio()
+        self.update_mirror_figures()
 
     def on_release(self, event):
         self.press = None
         self.resizing = False
         self.update_aspect_ratio()
+
+    def update_mirror_figures(self):
+        x1, y1, x2, y2 = self.get_coords()
+        for mirror_figure in self.mirror_figures:
+            mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2)
 
     def update_aspect_ratio(self):
         x1, y1, x2, y2 = self.get_coords()
