@@ -8,6 +8,7 @@ import globals
 import movment
 from figures import ResizableRectangle
 from figures import ResizableCircle
+from figures import ResizableCanvas
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -89,8 +90,16 @@ def clear():
         for rectangleCanvas in rectangles:
             rectangleCanvas.canvas.delete(rectangleCanvas.id)
             rectangles.remove(rectangleCanvas)
+        clear_mirror_canvas()
     except ValueError:
         pass
+
+
+def clear_mirror_canvas():
+    if globals.mirror_window is not None:
+        mirror_canvas = globals.mirror_window.winfo_children()[0]
+        mirror_canvas.delete("all")
+        canvas.delete("all")
 
 
 def center_window(root, width, height):
@@ -277,7 +286,7 @@ def remove_rectangle():
                 rectangle_to_remove = rectangles[-1]
             rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
             rectangles.remove(rectangle_to_remove)
-            # Remove mirror rectangle
+
             for mirror_rectangle in rectangle_to_remove.mirror_figures:
                 mirror_rectangle.canvas.delete(mirror_rectangle.id)
         except ValueError:
@@ -357,7 +366,8 @@ remove_rectangle_button = tk.Button(button_frame, text="Eliminar figura", comman
                                     width=15)
 remove_rectangle_button.grid(row=0, column=3)
 
-canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg=config.CANVAS_BACKGROUND_COLOR)
+canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
+                                         bg=config.CANVAS_BACKGROUND_COLOR)
 canvas.pack(anchor='nw', padx=30, pady=10)
 
 # Crea un botón que crea una ventana espejo cuando se presiona

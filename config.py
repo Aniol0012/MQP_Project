@@ -19,6 +19,12 @@ CIRCLE_HEIGHT = 150  # Default 150
 # Añadir una relacion de aspecto debajo de los cuadrados
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 
+# Hacer la ventana espejo con posicion relativa
+ENABLE_RELATIVE_POSITION = True  # Default: True
+
+# Mostrar un punto rojo en la esquina inferior derecha del canvas para redimensionarlo
+SHOW_RED_DOT_CANVAS = True  # Default: True
+
 # Precision de decimales del resultado
 RESULT_DECIMAL_PRECISION = 2  # Default: 2
 

@@ -1,6 +1,7 @@
 import fractions
 import auxi
 import globals
+import config
 
 
 class ResizableRectangle:
@@ -66,7 +67,18 @@ class ResizableRectangle:
     def update_mirror_figures(self):
         x1, y1, x2, y2 = self.get_coords()
         for mirror_figure in self.mirror_figures:
-            mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2)
+            if config.ENABLE_RELATIVE_POSITION:
+                canvas_width = self.canvas.winfo_width()
+                canvas_height = self.canvas.winfo_height()
+                mirror_canvas_width = mirror_figure.canvas.winfo_width()
+                mirror_canvas_height = mirror_figure.canvas.winfo_height()
+                new_x1 = x1 * mirror_canvas_width / canvas_width
+                new_y1 = y1 * mirror_canvas_height / canvas_height
+                new_x2 = x2 * mirror_canvas_width / canvas_width
+                new_y2 = y2 * mirror_canvas_height / canvas_height
+                mirror_figure.canvas.coords(mirror_figure.id, new_x1, new_y1, new_x2, new_y2)
+            else:
+                mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2)
 
     def update_aspect_ratio(self):
         x1, y1, x2, y2 = self.get_coords()
