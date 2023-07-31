@@ -32,13 +32,15 @@ SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
 DEFAULT_LANGUAGE = "es"
 
 # Colores
-COLORS = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
+COLORS = {"Verde": "#3bec24", "Azul": "#24a0ed", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
 
 # Nombre del archivo para guardar (tiene que terminar en .pkl)
 FILE_NAME = "proyectoMQP.pkl"  # Default: "proyectoMQP.pkl"
 
 # Color del fondo de pantalla
 BACKGROUND_COLOR = "light grey"  # Default: "light grey"
+
+LABELS_BG = BACKGROUND_COLOR  # Default: "light grey"
 
 # Color del fondo del Canvas
 CANVAS_BACKGROUND_COLOR = "light grey"  # Default: "light grey"

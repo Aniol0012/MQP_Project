@@ -9,7 +9,6 @@ import fractions
 import random
 import importlib
 import pickle
-import pyperclip
 import config
 import auxi
 import globals
@@ -59,7 +58,7 @@ def switch_language(value):
     load_translations(globals.language)
     clear()
     update_language()
-    root.title(get_title())
+    root.title(auxi.get_title())
 
 
 def update_language():
@@ -129,35 +128,16 @@ def clear_mirror_canvas():
         canvas.delete("all")
 
 
-def center_window(root, width, height):
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-    position_top = int(screen_height / 2 - height / 2)
-    position_right = int(screen_width / 2 - width / 2)
-    root.geometry(f"{width}x{height}+{position_right}+{position_top}")
-
-
-def get_title():
-    if globals.language == "es":
-        return "Calculadora de relación de aspecto"
-    elif globals.language == "en":
-        return "Aspect ratio calculator"
-    elif globals.language == "ca":
-        return "Calculadora de relació d'aspecte"
-    else:
-        return "Idioma no valido"
-
-
 root = tk.Tk()
-root.title(get_title())
+root.title(auxi.get_title())
 root.configure(bg=config.BACKGROUND_COLOR)
 
-center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
+auxi.center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 logo_image = Image.open(logo_image_path)
 photo = ImageTk.PhotoImage(logo_image)
 
-logo_label = tk.Label(root, image=photo, bg='light grey')
+logo_label = tk.Label(root, image=photo, bg=config.LABELS_BG)
 logo_label.pack(anchor="center")
 
 root.iconbitmap(icon_path)
@@ -203,8 +183,7 @@ def insert_oval():
         update_label(result_label, translations["err_msg"])
 
 
-def copy_to_clipboard(entry):
-    pyperclip.copy(entry.get())
+
 
 
 # Menú desplegable
@@ -212,7 +191,7 @@ dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_l
 dropdown.pack(anchor='nw', padx=30)
 
 # Entry X
-label1 = tk.Label(root, text=translations["enter_horizontal"], bg='light grey',
+label1 = tk.Label(root, text=translations["enter_horizontal"], bg=config.LABELS_BG,
                   font=('Helvetica', '14', 'bold'))
 label1.pack()
 
@@ -222,11 +201,11 @@ entry_frameX.pack()
 entryX = tk.Entry(entry_frameX, bd=2, width=30)
 entryX.pack(side='left', padx=10)
 
-copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda: copy_to_clipboard(entryX))
+copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda: auxi.copy_to_clipboard(entryX))
 copy_buttonX.pack(side='left')
 
 # Entry Y
-label2 = tk.Label(root, text=translations["enter_vertical"], bg='light grey', font=('Helvetica', '14', 'bold'))
+label2 = tk.Label(root, text=translations["enter_vertical"], bg=config.LABELS_BG, font=('Helvetica', '14', 'bold'))
 label2.pack()
 
 entry_frameY = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
@@ -235,7 +214,7 @@ entry_frameY.pack()
 entryY = tk.Entry(entry_frameY, bd=2, width=30)
 entryY.pack(side='left', padx=10)
 
-copy_buttonY = tk.Button(entry_frameY, text=translations["copy"], command=lambda: copy_to_clipboard(entryY))
+copy_buttonY = tk.Button(entry_frameY, text=translations["copy"], command=lambda: auxi.copy_to_clipboard(entryY))
 copy_buttonY.pack(side='left')
 
 # Frame for buttons
@@ -249,14 +228,16 @@ button = tk.Button(button_frame, text=translations["calculate"], command=calcula
                    width=15)
 button.grid(row=0, column=1, padx=10, pady=15)
 
-insert_rectangle_bt = tk.Button(button_frame, text="Insertar Cuadrado", command=insert_rectangle, bg='yellow', height=2,
+insert_rectangle_bt = tk.Button(button_frame, text=translations["insert_rectangle"], command=insert_rectangle,
+                                bg='yellow', height=2,
                                 width=15)
 insert_rectangle_bt.grid(row=1, column=0, padx=10)
 
-insert_oval_bt = tk.Button(button_frame, text="Insertar Circulo", command=insert_oval, bg='orange', height=2, width=15)
+insert_oval_bt = tk.Button(button_frame, text=translations["insert_oval"], command=insert_oval, bg='orange', height=2,
+                           width=15)
 insert_oval_bt.grid(row=1, column=1, padx=10)
 
-result_label = tk.Label(root, text="", bg='light grey', font=('Helvetica', '14'))
+result_label = tk.Label(root, text="", bg=config.LABELS_BG, font=('Helvetica', '14'))
 result_label.pack()
 
 
@@ -284,7 +265,7 @@ def calculate_remaining_value():
 
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
-    labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg='light grey',
+    labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg=config.LABELS_BG,
                           font=('Helvetica', '14', 'bold'))
     labelRatio.pack()
 
@@ -295,7 +276,7 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
     entryRatio.pack(side='left', padx=10)
 
     copy_buttonRatio = tk.Button(entry_frameRatio, text=translations["copy"],
-                                 command=lambda: copy_to_clipboard(entryRatio))
+                                 command=lambda: auxi.copy_to_clipboard(entryRatio))
     copy_buttonRatio.pack(side='left')
 
     buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='green',
@@ -458,7 +439,7 @@ canvas.pack(anchor='nw', padx=30, pady=10)
 mirror_bt = tk.Button(root, text=translations["create_mirror_window"], command=create_mirror_window)
 mirror_bt.pack()
 
-globals.aspect_ratio_label = tk.Label(root, text="", bg='light gray')
+globals.aspect_ratio_label = tk.Label(root, text="", bg=config.LABELS_BG)
 globals.aspect_ratio_label.pack()
 
 color = random.choice(list(COLORS.values()))
@@ -536,7 +517,6 @@ def load_state():
 def delete_file():
     try:
         os.remove(config.FILE_NAME)
-        print("File removed successfully")
     except FileNotFoundError:
         print("File not found")
 

@@ -1,4 +1,28 @@
+import pyperclip
 import globals
+
+
+def center_window(root, width, height):
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    position_top = int(screen_height / 2 - height / 2)
+    position_right = int(screen_width / 2 - width / 2)
+    root.geometry(f"{width}x{height}+{position_right}+{position_top}")
+
+
+def copy_to_clipboard(entry):
+    pyperclip.copy(entry.get())
+
+
+def get_title():
+    if globals.language == "es":
+        return "Calculadora de relación de aspecto"
+    elif globals.language == "en":
+        return "Aspect ratio calculator"
+    elif globals.language == "ca":
+        return "Calculadora de relació d'aspecte"
+    else:
+        return "Idioma no valido"
 
 
 def get_aspect_ratio_message(fraction_str, result):
