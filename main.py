@@ -12,6 +12,7 @@ from figures import ResizableRectangle
 from figures import ResizableCircle
 from figures import ResizableCanvas
 import importlib
+import pickle
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -22,7 +23,7 @@ RECTANGLE_HEIGHT = config.RECTANGLE_HEIGHT
 LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
-toggle_button = None
+toggle_button = globals.aspect_ratio_label
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
     WINDOW_HEIGHT += 120
@@ -72,6 +73,8 @@ def update_language():
     update_label(remove_figure_bt, translations["del_fig"])
     update_label(buttonRatio, translations["calc_rest_value"])
     update_label(toggle_button, translations["absolute_pos"])
+    update_label(save_bt, translations["save_bt"])
+    update_label(load_bt, translations["load_bt"])
 
 
 load_translations(globals.language)
@@ -464,5 +467,47 @@ root.bind('a', movment.move_left)
 root.bind('d', movment.move_right)
 root.bind('r', movment.enlarge)
 root.bind('f', movment.shrink)
+
+
+def get_state():
+    state = {
+        "rectangles": [(canvas.coords(rect.id), canvas.itemcget(rect.id, "fill")) for rect in rectangles],
+        "ovals": [(canvas.coords(oval.id), canvas.itemcget(oval.id, "fill")) for oval in ovals],
+    }
+    return state
+
+
+def save_state():
+    state = get_state()
+    with open("state.pkl", "wb") as f:
+        pickle.dump(state, f)
+
+
+def load_state():
+    with open("state.pkl", "rb") as f:
+        state = pickle.load(f)
+
+    for rect in rectangles:
+        canvas.delete(rect.id)
+    rectangles.clear()
+
+    for oval in ovals:
+        canvas.delete(oval.id)
+    ovals.clear()
+
+    for coords, color in state["rectangles"]:
+        new_rect = ResizableRectangle.ResizableRectangle(canvas, *coords, fill=color, width=5)
+        rectangles.append(new_rect)
+
+    for coords, color in state["ovals"]:
+        new_oval = ResizableCircle.ResizableCircle(canvas, *coords, fill=color, width=5)
+        ovals.append(new_oval)
+
+
+save_bt = tk.Button(root, text=translations["save_bt"], command=save_state)
+save_bt.place(relx=0.97, rely=0.1, anchor="ne", width=100)
+
+load_bt = tk.Button(root, text=translations["load_bt"], command=load_state)
+load_bt.place(relx=0.97, rely=0.13, anchor="ne", width=100)
 
 root.mainloop()

@@ -16,4 +16,6 @@ translations = {
     "err_msg": "Se han introducido valores incorrectos",
     "too_big_message": "Los valores introducidos son demasiado grandes",
     "absolute_pos": "Posicion absoluta",
+    "save_bt": "Guardar",
+    "load_bt": "Cargar",
 }

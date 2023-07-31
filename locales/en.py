@@ -16,4 +16,6 @@ translations = {
     "err_msg": "Incorrect values have been introduced",
     "too_big_message": "The introduced values are too big",
     "absolute_pos": "Absolute position",
+    "save_bt": "Save",
+    "load_bt": "Load",
 }
