@@ -9,6 +9,7 @@ import fractions
 import random
 import importlib
 import pickle
+import pyperclip
 import config
 import auxi
 import globals
@@ -77,6 +78,8 @@ def update_language():
     update_label(save_bt, translations["save_bt"])
     update_label(load_bt, translations["load_bt"])
     update_label(mirror_bt, translations["create_mirror_window"])
+    update_label(copy_buttonX, translations["copy"])
+    update_label(copy_buttonY, translations["copy"])
 
 
 load_translations(globals.language)
@@ -200,23 +203,42 @@ def insert_oval():
         update_label(result_label, translations["err_msg"])
 
 
+def copy_to_clipboard(entry):
+    pyperclip.copy(entry.get())
+
+
 # Menú desplegable
 dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_language)
 dropdown.pack(anchor='nw', padx=30)
 
+# Entry X
 label1 = tk.Label(root, text=translations["enter_horizontal"], bg='light grey',
                   font=('Helvetica', '14', 'bold'))
 label1.pack()
 
-entryX = tk.Entry(root, bd=2, width=30)
-entryX.pack()
+entry_frameX = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+entry_frameX.pack()
 
+entryX = tk.Entry(entry_frameX, bd=2, width=30)
+entryX.pack(side='left', padx=10)
+
+copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda: copy_to_clipboard(entryX))
+copy_buttonX.pack(side='left')
+
+# Entry Y
 label2 = tk.Label(root, text=translations["enter_vertical"], bg='light grey', font=('Helvetica', '14', 'bold'))
 label2.pack()
 
-entryY = tk.Entry(root, bd=2, width=30)
-entryY.pack()
+entry_frameY = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+entry_frameY.pack()
 
+entryY = tk.Entry(entry_frameY, bd=2, width=30)
+entryY.pack(side='left', padx=10)
+
+copy_buttonY = tk.Button(entry_frameY, text=translations["copy"], command=lambda: copy_to_clipboard(entryY))
+copy_buttonY.pack(side='left')
+
+# Frame for buttons
 button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(pady=10)
 
@@ -266,8 +288,15 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
                           font=('Helvetica', '14', 'bold'))
     labelRatio.pack()
 
-    entryRatio = tk.Entry(root, bd=2, width=30)
-    entryRatio.pack()
+    entry_frameRatio = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+    entry_frameRatio.pack()
+
+    entryRatio = tk.Entry(entry_frameRatio, bd=2, width=30)
+    entryRatio.pack(side='left', padx=10)
+
+    copy_buttonRatio = tk.Button(entry_frameRatio, text=translations["copy"],
+                                 command=lambda: copy_to_clipboard(entryRatio))
+    copy_buttonRatio.pack(side='left')
 
     buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='green',
                             height=2,
