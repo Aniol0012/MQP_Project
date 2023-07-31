@@ -1,19 +1,18 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+from figures import ResizableRectangle
+from figures import ResizableCircle
+from figures import ResizableCanvas
 import os
 import sys
-from PIL import Image, ImageTk
 import fractions
 import random
+import importlib
+import pickle
 import config
 import auxi
 import globals
 import movment
-from figures import ResizableRectangle
-from figures import ResizableCircle
-from figures import ResizableCanvas
-import importlib
-import pickle
-from datetime import datetime
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
