@@ -13,6 +13,7 @@ from figures import ResizableCircle
 from figures import ResizableCanvas
 import importlib
 import pickle
+from datetime import datetime
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -479,12 +480,12 @@ def get_state():
 
 def save_state():
     state = get_state()
-    with open("state.pkl", "wb") as f:
+    with open("pryectoMQP.pkl", "wb") as f:
         pickle.dump(state, f)
 
 
 def load_state():
-    with open("state.pkl", "rb") as f:
+    with open("pryectoMQP.pkl", "rb") as f:
         state = pickle.load(f)
 
     for rect in rectangles:
