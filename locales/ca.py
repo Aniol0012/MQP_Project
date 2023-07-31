@@ -20,4 +20,5 @@ translations = {
     "load_bt": "Carregar",
     "delete_bt": "Eliminar fitxer",
     "open_folder_bt": "Carpeta de l'arxiu",
+    "create_mirror_window": "Crear finestra espill",
 }

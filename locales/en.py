@@ -20,4 +20,5 @@ translations = {
     "load_bt": "Load",
     "delete_bt": "Delete file",
     "open_folder_bt": "File in folder",
+    "create_mirror_window": "Create mirror window",
 }

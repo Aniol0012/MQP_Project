@@ -72,9 +72,11 @@ def update_language():
     update_label(add_circle_bt, translations["add_oval"])
     update_label(remove_figure_bt, translations["del_fig"])
     update_label(buttonRatio, translations["calc_rest_value"])
-    update_label(toggle_button, translations["absolute_pos"])
+    if toggle_button is not None:
+        update_label(toggle_button, translations["absolute_pos"])
     update_label(save_bt, translations["save_bt"])
     update_label(load_bt, translations["load_bt"])
+    update_label(mirror_bt, translations["create_mirror_window"])
 
 
 load_translations(globals.language)
@@ -424,10 +426,8 @@ canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS
                                          bg=config.CANVAS_BACKGROUND_COLOR)
 canvas.pack(anchor='nw', padx=30, pady=10)
 
-# Crea un botón que crea una ventana espejo cuando se presiona
-# TODO Cambiar el idioma a este boton
-mirror_button = tk.Button(root, text="Crear ventana espejo", command=create_mirror_window)
-mirror_button.pack()
+mirror_bt = tk.Button(root, text=translations["create_mirror_window"], command=create_mirror_window)
+mirror_bt.pack()
 
 globals.aspect_ratio_label = tk.Label(root, text="", bg='light gray')
 globals.aspect_ratio_label.pack()

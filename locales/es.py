@@ -20,4 +20,5 @@ translations = {
     "load_bt": "Cargar",
     "delete_bt": "Eliminar archivo",
     "open_folder_bt": "Carpeta del archivo",
+    "create_mirror_window": "Crear ventana espejo",
 }
