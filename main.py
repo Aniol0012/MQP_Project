@@ -480,12 +480,12 @@ def get_state():
 
 def save_state():
     state = get_state()
-    with open("pryectoMQP.pkl", "wb") as f:
+    with open(config.FILE_NAME, "wb") as f:
         pickle.dump(state, f)
 
 
 def load_state():
-    with open("pryectoMQP.pkl", "rb") as f:
+    with open(config.FILE_NAME, "rb") as f:
         state = pickle.load(f)
 
     for rect in rectangles:
@@ -505,10 +505,31 @@ def load_state():
         ovals.append(new_oval)
 
 
+def delete_file():
+    try:
+        os.remove(config.FILE_NAME)
+        print("File removed successfully")
+    except FileNotFoundError:
+        print("File not found")
+
+
+def open_folder():
+    try:
+        os.startfile(os.getcwd())
+    except Exception as e:
+        print(f"Error opening folder: {e}")
+
+
 save_bt = tk.Button(root, text=translations["save_bt"], command=save_state)
-save_bt.place(relx=0.97, rely=0.1, anchor="ne", width=100)
+save_bt.place(relx=0.97, rely=0.1, anchor="ne", width=110)
 
 load_bt = tk.Button(root, text=translations["load_bt"], command=load_state)
-load_bt.place(relx=0.97, rely=0.13, anchor="ne", width=100)
+load_bt.place(relx=0.97, rely=0.13, anchor="ne", width=110)
+
+delete_bt = tk.Button(root, text=translations["delete_bt"], command=delete_file)
+delete_bt.place(relx=0.97, rely=0.16, anchor="ne", width=110)
+
+open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder)
+open_folder_bt.place(relx=0.97, rely=0.19, anchor="ne", width=110)
 
 root.mainloop()

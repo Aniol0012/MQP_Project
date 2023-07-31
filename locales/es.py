@@ -18,4 +18,6 @@ translations = {
     "absolute_pos": "Posicion absoluta",
     "save_bt": "Guardar",
     "load_bt": "Cargar",
+    "delete_bt": "Eliminar archivo",
+    "open_folder_bt": "Carpeta del archivo",
 }

@@ -18,4 +18,6 @@ translations = {
     "absolute_pos": "Posició absoluta",
     "save_bt": "Guardar",
     "load_bt": "Carregar",
+    "delete_bt": "Eliminar fitxer",
+    "open_folder_bt": "Carpeta de l'arxiu",
 }

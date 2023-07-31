@@ -34,6 +34,9 @@ DEFAULT_LANGUAGE = "es"
 # Colores
 COLORS = {"Verde": "green", "Azul": "blue", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
 
+# Nombre del archivo para guardar (tiene que terminar en .pkl)
+FILE_NAME = "proyectoMQP.pkl"  # Default: "proyectoMQP.pkl"
+
 # Color del fondo de pantalla
 BACKGROUND_COLOR = "light grey"  # Default: "light grey"
 
