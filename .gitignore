@@ -7,3 +7,4 @@ build
 main.spec
 output
 pryectoMQP.pkl
+executables/
