@@ -543,16 +543,16 @@ def open_folder():
         print(f"Error opening folder: {e}")
 
 
-save_bt = tk.Button(root, text=translations["save_bt"], command=save_state)
+save_bt = tk.Button(root, text=translations["save_bt"], command=save_state, fg="green")
 save_bt.place(relx=0.97, rely=0.1, anchor="ne", width=110)
 
-load_bt = tk.Button(root, text=translations["load_bt"], command=load_state)
+load_bt = tk.Button(root, text=translations["load_bt"], command=load_state, fg="#24a0ed")
 load_bt.place(relx=0.97, rely=0.13, anchor="ne", width=110)
 
-delete_bt = tk.Button(root, text=translations["delete_bt"], command=delete_file)
+delete_bt = tk.Button(root, text=translations["delete_bt"], command=delete_file, fg="red")
 delete_bt.place(relx=0.97, rely=0.16, anchor="ne", width=110)
 
-open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder)
+open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder, fg="#d1c92c")
 open_folder_bt.place(relx=0.97, rely=0.19, anchor="ne", width=110)
 
 root.mainloop()
