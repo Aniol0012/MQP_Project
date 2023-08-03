@@ -81,18 +81,21 @@ class ResizableRectangle:
                     mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2)
 
     def update_aspect_ratio(self):
-        x1, y1, x2, y2 = self.get_coords()
-        width = abs(x2 - x1)
-        height = abs(y2 - y1)
-        if height != 0:
-            aspect_ratio = width / height if height != 0 else 0
-            fraction = fractions.Fraction(int(width), int(height))
-            if fraction.denominator == 1:
-                fraction_str = f"{fraction.numerator}:1"
-            else:
-                fraction_str = str(fraction).replace("/", ":")
-            globals.aspect_ratio_label.config(
-                text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+        try:
+            x1, y1, x2, y2 = self.get_coords()
+            width = abs(x2 - x1)
+            height = abs(y2 - y1)
+            if height != 0:
+                aspect_ratio = width / height if height != 0 else 0
+                fraction = fractions.Fraction(int(width), int(height))
+                if fraction.denominator == 1:
+                    fraction_str = f"{fraction.numerator}:1"
+                else:
+                    fraction_str = str(fraction).replace("/", ":")
+                globals.aspect_ratio_label.config(
+                    text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+        except ValueError:
+            pass
 
     def reset(self):
         self.canvas.coords(self.id, *self.original_coords)

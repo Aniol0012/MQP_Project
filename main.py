@@ -37,8 +37,11 @@ logo_image_path = os.path.join(application_path, 'icons/mqp.png')
 icon_path = os.path.join(application_path, 'icons/mqp.ico')
 
 
-def update_label(label, string):
-    label.config(text=string)
+def update_label(label, string, color=None):
+    if color:
+        label.config(text=string, fg=color)
+    else:
+        label.config(text=string, fg="black")
 
 
 def load_translations(language):
@@ -96,7 +99,7 @@ def calculate_aspect_ratio():
             fraction_str = str(fraction).replace("/", ":")
         update_label(result_label, auxi.get_aspect_ratio_message(fraction_str, result))
     except ValueError:
-        update_label(result_label, translations["err_msg"])
+        update_label(result_label, translations["err_msg"], "red")
     except ZeroDivisionError:
         update_label(result_label, translations["no_divide_zero"])
 
@@ -106,19 +109,15 @@ ovals = []
 
 
 def clear():
-    try:
-        entryX.delete(0, tk.END)
-        entryY.delete(0, tk.END)
-        entryRatio.delete(0, tk.END)
-        rectangle.reset()
-        update_label(result_label, "")
-        for rectangleCanvas in rectangles:
-            rectangleCanvas.canvas.delete(rectangleCanvas.id)
-            rectangles.remove(rectangleCanvas)
-        clear_mirror_canvas()
-        update_label(result_label, "")
-    except ValueError:
-        pass
+    entryX.delete(0, tk.END)
+    entryY.delete(0, tk.END)
+    entryRatio.delete(0, tk.END)
+    rectangle.reset()
+    for rectangleCanvas in rectangles:
+        rectangleCanvas.canvas.delete(rectangleCanvas.id)
+        rectangles.remove(rectangleCanvas)
+    clear_mirror_canvas()
+    update_label(result_label, "")
 
 
 def clear_mirror_canvas():
@@ -166,7 +165,7 @@ def insert_rectangle():
         else:
             update_label(result_label, translations["too_big_message"])
     except ValueError:
-        update_label(result_label, translations["err_msg"])
+        update_label(result_label, translations["err_msg"], "red")
 
 
 def insert_oval():
@@ -184,7 +183,7 @@ def insert_oval():
         else:
             update_label(result_label, translations["too_big_message"])
     except ValueError:
-        update_label(result_label, translations["err_msg"])
+        update_label(result_label, translations["err_msg"], "red")
 
 
 # Menú desplegable
@@ -260,9 +259,9 @@ def calculate_remaining_value():
             else:
                 update_label(result_label, translations["intr_X_Y_value"])
         else:
-            update_label(result_label, translations["valid_aspect_ratio"])
+            update_label(result_label, translations["valid_aspect_ratio"], "red")
     except ValueError:
-        update_label(result_label, translations["err_msg"])
+        update_label(result_label, translations["err_msg"], "red")
 
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
@@ -518,6 +517,7 @@ def load_state():
             state = pickle.load(f)
             import_figures(state)
     except FileNotFoundError:
+        update_label(result_label, "No se ha encontrado el fichero", "red")
         print("No se ha encontrado el fichero")
     except UnboundLocalError:
         print("Unbound")
