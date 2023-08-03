@@ -16,6 +16,9 @@ RECTANGLE_HEIGHT = 150  # Default 150
 CIRCLE_WIDTH = 150  # Default: 150
 CIRCLE_HEIGHT = 150  # Default 150
 
+# Abrir la ventana maximizada
+MAXIMIZED_WINDOW = True  # Default: True
+
 # Añadir una relacion de aspecto debajo de los cuadrados
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 

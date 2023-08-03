@@ -1,7 +1,6 @@
 import fractions
 import auxi
 import globals
-import config
 
 
 class ResizableRectangle:

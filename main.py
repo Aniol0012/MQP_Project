@@ -132,7 +132,11 @@ root = tk.Tk()
 root.title(auxi.get_title())
 root.configure(bg=config.BACKGROUND_COLOR)
 
-auxi.center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
+if config.MAXIMIZED_WINDOW:
+    root.state('zoomed')
+    CANVAS_WIDTH = root.winfo_screenwidth()
+else:
+    auxi.center_window(root, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 logo_image = Image.open(logo_image_path)
 photo = ImageTk.PhotoImage(logo_image)
@@ -181,9 +185,6 @@ def insert_oval():
             update_label(result_label, translations["too_big_message"])
     except ValueError:
         update_label(result_label, translations["err_msg"])
-
-
-
 
 
 # Menú desplegable
@@ -493,10 +494,7 @@ def save_state():
         pickle.dump(state, f)
 
 
-def load_state():
-    with open(config.FILE_NAME, "rb") as f:
-        state = pickle.load(f)
-
+def import_figures(state):
     for rect in rectangles:
         canvas.delete(rect.id)
     rectangles.clear()
@@ -512,6 +510,17 @@ def load_state():
     for coords, color in state["ovals"]:
         new_oval = ResizableCircle.ResizableCircle(canvas, *coords, fill=color, width=5)
         ovals.append(new_oval)
+
+
+def load_state():
+    try:
+        with open(config.FILE_NAME, "rb") as f:
+            state = pickle.load(f)
+            import_figures(state)
+    except FileNotFoundError:
+        print("No se ha encontrado el fichero")
+    except UnboundLocalError:
+        print("Unbound")
 
 
 def delete_file():
