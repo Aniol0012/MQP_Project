@@ -1,3 +1,5 @@
+import config
+
 translations = {
     "enter_horizontal": "Introdueix la mesura horitzontal (x):",
     "enter_vertical": "Introdueix la mesura vertical (y):",
@@ -22,4 +24,8 @@ translations = {
     "open_folder_bt": "Carpeta de l'arxiu",
     "create_mirror_window": "Crear finestra espill",
     "copy": "Copiar",
+    "file_not_found": f"No s'ha trobat el fitxer {config.FILE_NAME}",
+    "file_loaded": f"S'ha carregat correctament el fitxer {config.FILE_NAME}",
+    "file_saved": f"S'ha guardat correctament el fitxer {config.FILE_NAME}",
+    "file_removed": f"S'ha eliminat el fitxer {config.FILE_NAME}",
 }

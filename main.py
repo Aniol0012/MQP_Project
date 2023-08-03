@@ -43,6 +43,9 @@ def update_label(label, string, color=None):
     else:
         label.config(text=string, fg="black")
 
+def clear_result_label():
+    result_label.config(text="", fg="black")
+
 
 def load_translations(language):
     global translations
@@ -101,7 +104,7 @@ def calculate_aspect_ratio():
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
     except ZeroDivisionError:
-        update_label(result_label, translations["no_divide_zero"])
+        update_label(result_label, translations["no_divide_zero"], "red")
 
 
 rectangles = []
@@ -117,7 +120,7 @@ def clear():
         rectangleCanvas.canvas.delete(rectangleCanvas.id)
         rectangles.remove(rectangleCanvas)
     clear_mirror_canvas()
-    update_label(result_label, "")
+    clear_result_label()
 
 
 def clear_mirror_canvas():
@@ -161,9 +164,9 @@ def insert_rectangle():
             create_mirror_rectangle(new_rectangle, color)
 
             globals.last_touched_figure = new_rectangle
-            update_label(result_label, "")
+            clear_result_label()
         else:
-            update_label(result_label, translations["too_big_message"])
+            update_label(result_label, translations["too_big_message"], "red")
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
 
@@ -179,9 +182,9 @@ def insert_oval():
             ovals.append(new_circle)
 
             globals.last_touched_figure = new_circle
-            update_label(result_label, "")
+            clear_result_label()
         else:
-            update_label(result_label, translations["too_big_message"])
+            update_label(result_label, translations["too_big_message"], "red")
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
 
@@ -488,6 +491,7 @@ def get_state():
 
 
 def save_state():
+    update_label(result_label, translations["file_saved"], "green")
     state = get_state()
     with open(config.FILE_NAME, "wb") as f:
         pickle.dump(state, f)
@@ -516,9 +520,9 @@ def load_state():
         with open(config.FILE_NAME, "rb") as f:
             state = pickle.load(f)
             import_figures(state)
+        update_label(result_label, translations["file_loaded"], "green")
     except FileNotFoundError:
-        update_label(result_label, "No se ha encontrado el fichero", "red")
-        print("No se ha encontrado el fichero")
+        update_label(result_label, translations["file_not_found"], "red")
     except UnboundLocalError:
         print("Unbound")
 
@@ -526,11 +530,13 @@ def load_state():
 def delete_file():
     try:
         os.remove(config.FILE_NAME)
+        update_label(result_label, translations["file_removed"], "green")
     except FileNotFoundError:
-        print("File not found")
+        update_label(result_label, translations["file_not_found"], "red")
 
 
 def open_folder():
+    clear_result_label()
     try:
         os.startfile(os.getcwd())
     except Exception as e:

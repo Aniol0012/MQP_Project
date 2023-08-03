@@ -1,3 +1,5 @@
+import config
+
 translations = {
     "enter_horizontal": "Enter the horizontal measure (x):",
     "enter_vertical": "Enter the vertical measure (y):",
@@ -22,4 +24,8 @@ translations = {
     "open_folder_bt": "File in folder",
     "create_mirror_window": "Create mirror window",
     "copy": "Copy",
+    "file_not_found": f"File {config.FILE_NAME} not found",
+    "file_loaded": f"The file {config.FILE_NAME} has been successfully loaded",
+    "file_saved": f"The file {config.FILE_NAME} has been successfully saved",
+    "file_removed": f"File {config.FILE_NAME} has been removed",
 }

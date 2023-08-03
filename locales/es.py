@@ -1,3 +1,5 @@
+import config
+
 translations = {
     "enter_horizontal": "Introduce la medida horizontal (x):",
     "enter_vertical": "Introduce la medida vertical (y):",
@@ -22,4 +24,8 @@ translations = {
     "open_folder_bt": "Carpeta del archivo",
     "create_mirror_window": "Crear ventana espejo",
     "copy": "Copiar",
+    "file_not_found": f"No se ha encontrado el fichero {config.FILE_NAME}",
+    "file_loaded": f"Se ha cargado correctamente el fichero {config.FILE_NAME}",
+    "file_saved": f"Se ha guardado correctamente el fichero {config.FILE_NAME}",
+    "file_removed": f"Se ha eliminado el fichero {config.FILE_NAME}",
 }
