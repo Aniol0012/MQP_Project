@@ -1,5 +1,6 @@
 if [[ $1 == "" ]]; then
   echo "Debes introducir un parametro con el nombre del ejectuable. Ejemplo: MQP_V9"
+  exit
 fi
 
 pip install pyinstaller

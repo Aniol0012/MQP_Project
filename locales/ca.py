@@ -28,4 +28,5 @@ translations = {
     "file_loaded": f"S'ha carregat correctament el fitxer {config.FILE_NAME}",
     "file_saved": f"S'ha guardat correctament el fitxer {config.FILE_NAME}",
     "file_removed": f"S'ha eliminat el fitxer {config.FILE_NAME}",
+    "err_folder": "S'ha produït un error al obrir la carpeta ",
 }

@@ -28,4 +28,5 @@ translations = {
     "file_loaded": f"The file {config.FILE_NAME} has been successfully loaded",
     "file_saved": f"The file {config.FILE_NAME} has been successfully saved",
     "file_removed": f"File {config.FILE_NAME} has been removed",
+    "err_folder": "There was an error opening the folder ",
 }

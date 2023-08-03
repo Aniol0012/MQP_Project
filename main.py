@@ -540,7 +540,7 @@ def open_folder():
     try:
         os.startfile(os.getcwd())
     except Exception as e:
-        print(f"Error opening folder: {e}")
+        update_label(result_label, translations["err_folder"] + e, "red")
 
 
 save_bt = tk.Button(root, text=translations["save_bt"], command=save_state, fg="green")
