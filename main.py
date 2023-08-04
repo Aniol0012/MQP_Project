@@ -220,7 +220,7 @@ dropdown.pack(anchor='nw', padx=30)
 
 # Entry X
 label1 = tk.Label(root, text=translations["enter_horizontal"], bg=config.LABELS_BG,
-                  font=('Helvetica', '14', 'bold'))
+                  font=config.LABEL_TITLE_FONT)
 label1.pack()
 
 entry_frameX = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
@@ -233,7 +233,7 @@ copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda
 copy_buttonX.pack(side='left')
 
 # Entry Y
-label2 = tk.Label(root, text=translations["enter_vertical"], bg=config.LABELS_BG, font=('Helvetica', '14', 'bold'))
+label2 = tk.Label(root, text=translations["enter_vertical"], bg=config.LABELS_BG, font=config.LABEL_TITLE_FONT)
 label2.pack()
 
 entry_frameY = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
@@ -253,7 +253,7 @@ clear_button = tk.Button(button_frame, text=translations["clear"], command=clear
                          width=config.BT_WIDTH)
 clear_button.grid(row=0, column=0, padx=config.PADX, )
 
-calculate_bt = tk.Button(button_frame, text=translations["calculate"], command=calculate_aspect_ratio, bg='green',
+calculate_bt = tk.Button(button_frame, text=translations["calculate"], command=calculate_aspect_ratio, bg='#37de59',
                          height=config.BT_HEIGHT,
                          width=config.BT_WIDTH)
 calculate_bt.grid(row=0, column=1, padx=config.PADX, pady=15)
@@ -297,7 +297,7 @@ def calculate_remaining_value():
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
     labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg=config.LABELS_BG,
-                          font=('Helvetica', '14', 'bold'))
+                          font=config.LABEL_TITLE_FONT)
     labelRatio.pack()
 
     entry_frameRatio = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
@@ -310,7 +310,7 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
                                  command=lambda: auxi.copy_to_clipboard(entryRatio))
     copy_buttonRatio.pack(side='left')
 
-    buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='green',
+    buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='#37dea1',
                             height=config.BT_HEIGHT,
                             width=config.BT_WIDTH + 5)
     buttonRatio.pack(pady=10)
@@ -488,7 +488,7 @@ load_canvas_img_bt = tk.Button(button_frame, text=translations["load_img"],
 load_canvas_img_bt.grid(row=0, column=4, padx=config.PADX)
 
 remove_canvas_img_bt = tk.Button(button_frame, text=translations["remove_img"], command=delete_canvas_image,
-                                 bg='orange', height=config.BT_HEIGHT, width=config.BT_WIDTH)
+                                 bg='#de6137', height=config.BT_HEIGHT, width=config.BT_WIDTH)
 remove_canvas_img_bt.grid(row=0, column=5, padx=config.PADX)
 
 

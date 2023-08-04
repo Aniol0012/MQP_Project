@@ -49,6 +49,9 @@ BACKGROUND_COLOR = "light grey"  # Default: "light grey"
 
 LABELS_BG = BACKGROUND_COLOR  # Default: "light grey"
 
+# Fuente de los títulos de los labels
+LABEL_TITLE_FONT = ('Helvetica', '14', 'bold')
+
 # Color del fondo del Canvas
 CANVAS_BACKGROUND_COLOR = "light grey"  # Default: "light grey"
 
@@ -57,7 +60,7 @@ CANVAS_BACKGROUND_COLOR = "light grey"  # Default: "light grey"
 PADX = 10
 
 # Altura estándar de la mayoría de botones
-BT_HEIGHT = 2
+BT_HEIGHT = 2  # Default: 2
 
 # Anchura estándar de la mayoría de botones
-BT_WIDTH = 15
+BT_WIDTH = 15  # Default: 15
