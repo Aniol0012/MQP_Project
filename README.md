@@ -3,6 +3,10 @@ Proyecto hecho con Tkinter para MasQueProyectores que sirve como calculadora de 
 
 [Descarga las últimas versiones aquí](https://github.com/Aniol0012/MQP_Project/releases)
 
+## Previsualización
+**V9.5**
+![Previsualización](preview/preview_v9.png)
+
 ## Instrucciones para crear el ejecutable
 
 Para crear el ejecutable de este programa para sistemas Windows se puede usar la herramienta ya incluida en los ficheros del proyecto llamada [build.sh](https://github.com/Aniol0012/MQP_Project/blob/main/build.sh).
@@ -45,6 +49,3 @@ Para mover las figuras, usa las siguientes teclas:
 - `F` Para encoger
 
 
-## Previsualización
-**V9.5.0**
-![Previsualización](preview/preview_v9.png)
