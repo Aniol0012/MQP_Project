@@ -1,8 +1,12 @@
 import config
+import globals
 
 translations = {
+    "title": "Aspect ratio calculator",
     "enter_horizontal": "Enter the horizontal measure (x):",
     "enter_vertical": "Enter the vertical measure (y):",
+    "aspect_ratio_msg": f"The aspect ratio is {globals.fraction_str} ({globals.ap_result})",
+    "aspect_ratio_msg2": "",
     "calculate": "Calculate",
     "insert_rectangle": "Insert rectangle",
     "insert_oval": "Insert oval",
@@ -29,4 +33,7 @@ translations = {
     "file_saved": f"The file {config.FILE_NAME} has been successfully saved",
     "file_removed": f"File {config.FILE_NAME} has been removed",
     "err_folder": "There was an error opening the folder ",
+    "img": "Imatges",
+    "load_img": "Load imatge",
+    "remove_img": "Delete imatge",
 }

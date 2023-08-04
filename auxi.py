@@ -14,17 +14,6 @@ def copy_to_clipboard(entry):
     pyperclip.copy(entry.get())
 
 
-def get_title():
-    if globals.language == "es":
-        return "Calculadora de relación de aspecto"
-    elif globals.language == "en":
-        return "Aspect ratio calculator"
-    elif globals.language == "ca":
-        return "Calculadora de relació d'aspecte"
-    else:
-        return "Idioma no valido"
-
-
 def get_aspect_ratio_message(fraction_str, result):
     if globals.language == "en":
         return f"The aspect ratio is {fraction_str} ({result})"

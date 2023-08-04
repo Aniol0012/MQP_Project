@@ -5,8 +5,8 @@ WINDOW_WIDTH = 800  # Default: 800
 WINDOW_HEIGHT = 1000  # Default: 900
 
 # Dimensiones del canvas
-CANVAS_WIDTH = 700  # Default: 700
-CANVAS_HEIGHT = 400  # Default: 400
+CANVAS_WIDTH = 700  # Default: 700 (Si esta activado MAXIMIZED_WINDOW este parámetro no tendra ningún efecto)
+CANVAS_HEIGHT = 450  # Default: 450
 
 # Dimensiones del rectángulo por defecto que deben de ser inferiores a las del canvas
 RECTANGLE_WIDTH = 150  # Default: 150
@@ -35,7 +35,8 @@ SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
 DEFAULT_LANGUAGE = "es"
 
 # Colores
-COLORS = {"Verde": "#3bec24", "Azul": "#24a0ed", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple"}
+COLORS = {"Verde": "#3bec24", "Azul": "#24a0ed", "Rojo": "red", "Amarillo": "yellow", "Morado": "purple",
+          "Gris": "gray"}
 
 # Nombre del archivo para guardar (tiene que terminar en .pkl)
 FILE_NAME = "proyectoMQP.pkl"  # Default: "proyectoMQP.pkl"

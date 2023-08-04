@@ -1,8 +1,12 @@
 import config
+import globals
 
 translations = {
+    "title": "Calculadora de relació d'aspecte",
     "enter_horizontal": "Introdueix la mesura horitzontal (x):",
     "enter_vertical": "Introdueix la mesura vertical (y):",
+    "aspect_ratio_msg": f"La relació d'aspecte és {globals.fraction_str} ({globals.ap_result})",
+    "aspect_ratio_msg2": "",
     "calculate": "Calcular",
     "insert_rectangle": "Inserir rectangle",
     "insert_oval": "Inserir oval",
@@ -29,4 +33,7 @@ translations = {
     "file_saved": f"S'ha guardat correctament el fitxer {config.FILE_NAME}",
     "file_removed": f"S'ha eliminat el fitxer {config.FILE_NAME}",
     "err_folder": "S'ha produït un error al obrir la carpeta ",
+    "img": "Imatges",
+    "load_img": "Carregar imatge",
+    "remove_img": "Eliminar imatge",
 }

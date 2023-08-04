@@ -1,8 +1,12 @@
 import config
+import globals
 
 translations = {
+    "title": "Calculadora de relación de aspecto",
     "enter_horizontal": "Introduce la medida horizontal (x):",
     "enter_vertical": "Introduce la medida vertical (y):",
+    "aspect_ratio_msg": f"La relación de aspecto es {globals.fraction_str} ({globals.ap_result})",
+    "aspect_ratio_msg2": "",
     "calculate": "Calcular",
     "insert_rectangle": "Insertar rectángulo",
     "insert_oval": "Insertar ovalo",
@@ -29,4 +33,7 @@ translations = {
     "file_saved": f"Se ha guardado correctamente el fichero {config.FILE_NAME}",
     "file_removed": f"Se ha eliminado el fichero {config.FILE_NAME}",
     "err_folder": "Se ha producido un error al abrir la carpeta ",
+    "img": "Imágenes",
+    "load_img": "Cargar imagen",
+    "remove_img": "Eliminar imagen",
 }
