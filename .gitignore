@@ -6,5 +6,5 @@ dist
 build
 main.spec
 output
-pryectoMQP.pkl
+*.pkl
 executables/

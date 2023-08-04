@@ -3,8 +3,8 @@ import globals
 
 translations = {
     "title": "Aspect ratio calculator",
-    "enter_horizontal": "Enter the horizontal measure (x):",
-    "enter_vertical": "Enter the vertical measure (y):",
+    "enter_horizontal": "Enter the horizontal measure (x)",
+    "enter_vertical": "Enter the vertical measure (y)",
     "aspect_ratio_msg": f"The aspect ratio is {globals.fraction_str} ({globals.ap_result})",
     "aspect_ratio_msg2": "",
     "calculate": "Calculate",
@@ -12,7 +12,7 @@ translations = {
     "insert_oval": "Insert oval",
     "clear": "Clear",
     "calc_rest_value": "Calculate remaining value",
-    "intr_aspect_ratio": "Enter the aspect ratio (x:y):",
+    "intr_aspect_ratio": "Enter the aspect ratio (x:y)",
     "valid_aspect_ratio": "Please, enter a valid aspect ratio.",
     "intr_X_Y_value": "Please, enter a value for X or Y.",
     "add_rect": "Add rectangle",
@@ -36,4 +36,6 @@ translations = {
     "img": "Imatges",
     "load_img": "Load imatge",
     "remove_img": "Delete imatge",
+    "suc_load_img": "The following image has been loaded: ",
+    "err_load_img": "No image uploaded",
 }

@@ -25,6 +25,8 @@ LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
 toggle_button = globals.aspect_ratio_label
+rectangle = None
+canvas_image = None
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
     WINDOW_HEIGHT += 120
@@ -72,7 +74,7 @@ def switch_language(value):
 def update_language():
     update_label(label1, translations["enter_horizontal"])
     update_label(label2, translations["enter_vertical"])
-    update_label(button, translations["calculate"])
+    update_label(calculate_bt, translations["calculate"])
     update_label(insert_rectangle_bt, translations["insert_rectangle"])
     update_label(insert_oval_bt, translations["insert_oval"])
     update_label(clear_button, translations["clear"])
@@ -122,12 +124,27 @@ def clear():
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
     entryRatio.delete(0, tk.END)
-    rectangle.reset()
-    for rectangleCanvas in rectangles:
-        rectangleCanvas.canvas.delete(rectangleCanvas.id)
-        rectangles.remove(rectangleCanvas)
+    remove_figures()
     clear_mirror_canvas()
     clear_result_label()
+
+
+def clear_canvas():
+    remove_figures()
+    clear_mirror_canvas()
+
+
+def remove_figures():
+    try:
+        for rectangleCanvas in rectangles:
+            rectangleCanvas.canvas.delete(rectangleCanvas.id)
+            rectangles.remove(rectangleCanvas)
+
+        for ovalCanvas in ovals:
+            ovalCanvas.canvas.delete(ovalCanvas.id)
+            rectangles.remove(ovalCanvas)
+    except ValueError:
+        pass
 
 
 def clear_mirror_canvas():
@@ -140,6 +157,7 @@ def clear_mirror_canvas():
 root = tk.Tk()
 root.title(translations["title"])
 root.configure(bg=config.BACKGROUND_COLOR)
+root.geometry(f'+{root.winfo_screenwidth() * config.SCREEN_TO_OPEN_ROOT}+0')
 
 if config.MAXIMIZED_WINDOW:
     root.state('zoomed')
@@ -209,7 +227,7 @@ entry_frameX = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
 entry_frameX.pack()
 
 entryX = tk.Entry(entry_frameX, bd=2, width=30)
-entryX.pack(side='left', padx=10)
+entryX.pack(side='left', padx=config.PADX)
 
 copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda: auxi.copy_to_clipboard(entryX))
 copy_buttonX.pack(side='left')
@@ -222,7 +240,7 @@ entry_frameY = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
 entry_frameY.pack()
 
 entryY = tk.Entry(entry_frameY, bd=2, width=30)
-entryY.pack(side='left', padx=10)
+entryY.pack(side='left', padx=config.PADX)
 
 copy_buttonY = tk.Button(entry_frameY, text=translations["copy"], command=lambda: auxi.copy_to_clipboard(entryY))
 copy_buttonY.pack(side='left')
@@ -231,22 +249,24 @@ copy_buttonY.pack(side='left')
 button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(pady=10)
 
-clear_button = tk.Button(button_frame, text=translations["clear"], command=clear, bg='orange', height=2, width=15)
-clear_button.grid(row=0, column=0, padx=10,)
+clear_button = tk.Button(button_frame, text=translations["clear"], command=clear, bg='orange', height=config.BT_HEIGHT,
+                         width=config.BT_WIDTH)
+clear_button.grid(row=0, column=0, padx=config.PADX, )
 
-button = tk.Button(button_frame, text=translations["calculate"], command=calculate_aspect_ratio, bg='green', height=2,
-                   width=15)
-button.grid(row=0, column=1, padx=10, pady=15)
+calculate_bt = tk.Button(button_frame, text=translations["calculate"], command=calculate_aspect_ratio, bg='green',
+                         height=config.BT_HEIGHT,
+                         width=config.BT_WIDTH)
+calculate_bt.grid(row=0, column=1, padx=config.PADX, pady=15)
 
 insert_rectangle_bt = tk.Button(button_frame, text=translations["insert_rectangle"], command=insert_rectangle,
-                                bg='#6f2aa3', fg='white', height=2,
-                                width=15)
-insert_rectangle_bt.grid(row=0, column=2, padx=10)
+                                bg='#6f2aa3', fg='white', height=config.BT_HEIGHT,
+                                width=config.BT_WIDTH)
+insert_rectangle_bt.grid(row=0, column=2, padx=config.PADX)
 
 insert_oval_bt = tk.Button(button_frame, text=translations["insert_oval"], command=insert_oval, bg='#db306c',
-                           fg='white', height=2,
-                           width=15)
-insert_oval_bt.grid(row=0, column=3, padx=10)
+                           fg='white', height=config.BT_HEIGHT,
+                           width=config.BT_WIDTH)
+insert_oval_bt.grid(row=0, column=3, padx=config.PADX)
 
 result_label = tk.Label(root, text="", bg=config.LABELS_BG, font=('Helvetica', '14'))
 result_label.pack()
@@ -284,15 +304,15 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
     entry_frameRatio.pack()
 
     entryRatio = tk.Entry(entry_frameRatio, bd=2, width=30)
-    entryRatio.pack(side='left', padx=10)
+    entryRatio.pack(side='left', padx=config.PADX)
 
     copy_buttonRatio = tk.Button(entry_frameRatio, text=translations["copy"],
                                  command=lambda: auxi.copy_to_clipboard(entryRatio))
     copy_buttonRatio.pack(side='left')
 
     buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='green',
-                            height=2,
-                            width=20)
+                            height=config.BT_HEIGHT,
+                            width=config.BT_WIDTH + 5)
     buttonRatio.pack(pady=10)
 
 
@@ -400,19 +420,19 @@ def create_mirror_rectangle(new_rectangle, color):
         new_rectangle.mirror_figures.append(mirror_rectangle)
 
 
-canvas_image = None
-
-
 def load_canvas_image(canvas, root):
     global canvas_image
     filepath = filedialog.askopenfilename(filetypes=[(translations["img"], "*.png;*.jpg;*.jpeg;*.bmp")])
 
     if filepath:
+        clear_canvas()
         bg_image = Image.open(filepath)
         bg_image = bg_image.resize((canvas.winfo_width(), canvas.winfo_height()), Image.BICUBIC)
         bg_image_tk = ImageTk.PhotoImage(bg_image)
         canvas_image = canvas.create_image(0, 0, anchor='nw', image=bg_image_tk)
         root.image = bg_image_tk
+        imatge = os.path.basename(filepath)
+        update_label(result_label, translations["suc_load_img"] + imatge, "green")
 
 
 def delete_canvas_image():
@@ -420,6 +440,9 @@ def delete_canvas_image():
     if canvas_image is not None:
         canvas.delete(canvas_image)
         canvas_image = None
+        clear_result_label()
+    else:
+        update_label(result_label, translations["err_load_img"], "red")
 
 
 def toggle_bt():
@@ -442,36 +465,39 @@ button_frame = tk.Frame(root, bg='light grey')
 button_frame.pack(anchor='nw', padx=30, pady=10)
 
 color_dropdown = tk.OptionMenu(button_frame, selected_color, *COLORS.keys(), command=change_color)
-color_dropdown.grid(row=0, column=0, padx=10)
+color_dropdown.grid(row=0, column=0, padx=config.PADX)
 
-add_rectangle_bt = tk.Button(button_frame, text=translations["add_rect"], command=add_rectangle, bg='#0EA7FF', height=2,
-                             width=15)
-add_rectangle_bt.grid(row=0, column=1, padx=10)
+add_rectangle_bt = tk.Button(button_frame, text=translations["add_rect"], command=add_rectangle, bg='#0EA7FF',
+                             height=config.BT_HEIGHT,
+                             width=config.BT_WIDTH)
+add_rectangle_bt.grid(row=0, column=1, padx=config.PADX)
 
-add_circle_bt = tk.Button(button_frame, text=translations["add_oval"], command=add_circle, bg='green', height=2,
-                          width=15)
-add_circle_bt.grid(row=0, column=2, padx=10)
+add_circle_bt = tk.Button(button_frame, text=translations["add_oval"], command=add_circle, bg='green',
+                          height=config.BT_HEIGHT,
+                          width=config.BT_WIDTH)
+add_circle_bt.grid(row=0, column=2, padx=config.PADX)
 
 remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command=remove_rectangle, bg='#F37D70',
-                             height=2,
-                             width=15)
-remove_figure_bt.grid(row=0, column=3, padx=10)
+                             height=config.BT_HEIGHT,
+                             width=config.BT_WIDTH)
+remove_figure_bt.grid(row=0, column=3, padx=config.PADX)
 
 load_canvas_img_bt = tk.Button(button_frame, text=translations["load_img"],
                                command=lambda: load_canvas_image(canvas, root),
-                               bg='yellow', height=2, width=15)
-load_canvas_img_bt.grid(row=0, column=4, padx=10)
+                               bg='yellow', height=config.BT_HEIGHT, width=config.BT_WIDTH)
+load_canvas_img_bt.grid(row=0, column=4, padx=config.PADX)
 
 remove_canvas_img_bt = tk.Button(button_frame, text=translations["remove_img"], command=delete_canvas_image,
-                                 bg='orange', height=2, width=15)
-remove_canvas_img_bt.grid(row=0, column=5, padx=10)
+                                 bg='orange', height=config.BT_HEIGHT, width=config.BT_WIDTH)
+remove_canvas_img_bt.grid(row=0, column=5, padx=config.PADX)
 
 
 def create_toggle():
     global toggle_button
     toggle_button = tk.Checkbutton(button_frame, text=translations["absolute_pos"], variable=button_var,
-                                   command=toggle_bt, onvalue=1, offvalue=0, height=2, width=15, bg='purple')
-    toggle_button.grid(row=0, column=6, padx=10)
+                                   command=toggle_bt, onvalue=1, offvalue=0, height=config.BT_HEIGHT,
+                                   width=config.BT_WIDTH, bg='purple')
+    toggle_button.grid(row=0, column=6, padx=config.PADX)
 
 
 canvas = ResizableCanvas.ResizableCanvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
@@ -483,17 +509,6 @@ mirror_bt.pack()
 
 globals.aspect_ratio_label = tk.Label(root, text="", bg=config.LABELS_BG)
 globals.aspect_ratio_label.pack()
-
-color = random.choice(list(COLORS.values()))
-if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
-    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
-                                                      50 + config.RECTANGLE_HEIGHT,
-                                                      fill=color, width=5)
-else:
-    rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color,
-                                                      width=5)
-
-rectangles.append(rectangle)
 
 root.focus_set()
 
@@ -591,7 +606,7 @@ load_bt.place(relx=0.97, rely=0.13, anchor="ne", width=110)
 delete_bt = tk.Button(root, text=translations["delete_bt"], command=delete_file, fg="red")
 delete_bt.place(relx=0.97, rely=0.16, anchor="ne", width=110)
 
-open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder, fg="#d1c92c")
+open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder, fg="orange")
 open_folder_bt.place(relx=0.97, rely=0.19, anchor="ne", width=110)
 
 root.mainloop()

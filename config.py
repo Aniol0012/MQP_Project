@@ -28,6 +28,9 @@ SHOW_RED_DOT_CANVAS = True  # Default: True
 # Precision de decimales del resultado
 RESULT_DECIMAL_PRECISION = 2  # Default: 2
 
+# En que pantalla se debe abrir la pantalla principal
+SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la primera
+
 # En que pantalla se debe abrir la pantalla espejo
 SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
 
@@ -48,3 +51,13 @@ LABELS_BG = BACKGROUND_COLOR  # Default: "light grey"
 
 # Color del fondo del Canvas
 CANVAS_BACKGROUND_COLOR = "light grey"  # Default: "light grey"
+
+# Botones
+# Separación horizontal botones
+PADX = 10
+
+# Altura estándar de la mayoría de botones
+BT_HEIGHT = 2
+
+# Anchura estándar de la mayoría de botones
+BT_WIDTH = 15

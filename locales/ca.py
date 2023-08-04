@@ -3,8 +3,8 @@ import globals
 
 translations = {
     "title": "Calculadora de relació d'aspecte",
-    "enter_horizontal": "Introdueix la mesura horitzontal (x):",
-    "enter_vertical": "Introdueix la mesura vertical (y):",
+    "enter_horizontal": "Introdueix la mesura horitzontal (x)",
+    "enter_vertical": "Introdueix la mesura vertical (y)",
     "aspect_ratio_msg": f"La relació d'aspecte és {globals.fraction_str} ({globals.ap_result})",
     "aspect_ratio_msg2": "",
     "calculate": "Calcular",
@@ -12,7 +12,7 @@ translations = {
     "insert_oval": "Inserir oval",
     "clear": "Netejar",
     "calc_rest_value": "Calcular valor restant",
-    "intr_aspect_ratio": "Introdueix la relació d'aspecte (x:y):",
+    "intr_aspect_ratio": "Introdueix la relació d'aspecte (x:y)",
     "valid_aspect_ratio": "Si us plau, introdueix una relació d'aspecte vàlida.",
     "intr_X_Y_value": "Si us plau, introdueix un valor per a X o Y.",
     "add_rect": "Afegir rectangle",
@@ -36,4 +36,6 @@ translations = {
     "img": "Imatges",
     "load_img": "Carregar imatge",
     "remove_img": "Eliminar imatge",
+    "suc_load_img": "S'ha carregat l'imatge: ",
+    "err_load_img": "No s'ha carregat cap imatge",
 }
