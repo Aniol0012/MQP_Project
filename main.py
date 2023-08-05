@@ -136,13 +136,13 @@ def clear_canvas():
 
 def remove_figures():
     try:
-        for rectangleCanvas in rectangles:
+        for rectangleCanvas in rectangles.copy():
             rectangleCanvas.canvas.delete(rectangleCanvas.id)
             rectangles.remove(rectangleCanvas)
 
-        for ovalCanvas in ovals:
+        for ovalCanvas in ovals.copy():
             ovalCanvas.canvas.delete(ovalCanvas.id)
-            rectangles.remove(ovalCanvas)
+            ovals.remove(ovalCanvas)
     except ValueError:
         pass
 
@@ -288,7 +288,7 @@ def calculate_remaining_value():
                 entryX.delete(0, tk.END)
                 entryX.insert(0, str(x))
             else:
-                update_label(result_label, translations["intr_X_Y_value"])
+                update_label(result_label, translations["intr_X_Y_value"], "red")
         else:
             update_label(result_label, translations["valid_aspect_ratio"], "red")
     except ValueError:
@@ -532,8 +532,8 @@ root.bind('w', movment.move_up)
 root.bind('s', movment.move_down)
 root.bind('a', movment.move_left)
 root.bind('d', movment.move_right)
-root.bind('r', movment.enlarge)
-root.bind('f', movment.shrink)
+root.bind('r', movment.increase)
+root.bind('f', movment.decrease)
 
 
 def get_state():

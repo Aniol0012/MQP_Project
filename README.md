@@ -1,5 +1,5 @@
 # MQP_Project
-Proyecto hecho con **Tkinter** para **MasQueProyectores** que sirve como **calculadora de relaciones de aspecto**. También incluye un **canvas** para poder crear figuras personalizadas junto con una variedad de funcionalidades extra que resultan muy cómodas y útiles para el usuario. Pruébala ya aquí:
+Proyecto hecho con **Tkinter** para [**MasQueProyectores**](https://masqueproyectores.com) que sirve como **calculadora de relaciones de aspecto**. También incluye un **canvas** para poder crear figuras personalizadas junto con una variedad de funcionalidades extra que resultan muy cómodas y útiles para el usuario. Pruébala ya aquí:
 
 [Descarga las últimas versiones aquí](https://github.com/Aniol0012/MQP_Project/releases)
 
