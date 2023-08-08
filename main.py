@@ -124,7 +124,7 @@ ovals = []
 def clear():
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
-    entryRatio.delete(0, tk.END)
+    entry_ratio.delete(0, tk.END)
     remove_figures()
     clear_mirror_canvas()
     clear_result_label()
@@ -155,10 +155,14 @@ def clear_mirror_canvas():
         canvas.delete("all")
 
 
+def concatenate_canvas_wh():
+    return " (max: " + str(CANVAS_WIDTH) + "x" + str(CANVAS_HEIGHT) + ")"
+
+
 def insert_rectangle():
     color = random.choice(list(COLORS.values()))
     try:
-        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
+        if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
             new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
                                                                   50 + int(entryY.get()),
                                                                   fill=color,
@@ -169,7 +173,7 @@ def insert_rectangle():
             globals.last_touched_figure = new_rectangle
             clear_result_label()
         else:
-            update_label(result_label, translations["too_big_message"], "red")
+            update_label(result_label, translations["too_big_message"] + concatenate_canvas_wh(), "red")
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
 
@@ -177,7 +181,7 @@ def insert_rectangle():
 def insert_oval():
     color = random.choice(list(COLORS.values()))
     try:
-        if int(entryX.get()) < CANVAS_WIDTH and int(entryY.get()) < CANVAS_HEIGHT:
+        if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
             new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + int(entryX.get()),
                                                          50 + int(entryY.get()),
                                                          fill=color,
@@ -187,14 +191,14 @@ def insert_oval():
             globals.last_touched_figure = new_circle
             clear_result_label()
         else:
-            update_label(result_label, translations["too_big_message"], "red")
+            update_label(result_label, translations["too_big_message"] + concatenate_canvas_wh(), "red")
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
 
 
 def calculate_remaining_value():
     try:
-        aspect_ratio = entryRatio.get().split(":")
+        aspect_ratio = entry_ratio.get().split(":")
         if aspect_ratio[0].isdigit() and aspect_ratio[1].isdigit():
             aspect_ratio = [int(i) for i in aspect_ratio]
             if entryX.get():
@@ -440,11 +444,11 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
     entry_frameRatio = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
     entry_frameRatio.pack()
 
-    entryRatio = tk.Entry(entry_frameRatio, bd=2, width=30)
-    entryRatio.pack(side='left', padx=config.PADX)
+    entry_ratio = tk.Entry(entry_frameRatio, bd=2, width=30)
+    entry_ratio.pack(side='left', padx=config.PADX)
 
     copy_buttonRatio = tk.Button(entry_frameRatio, text=translations["copy"],
-                                 command=lambda: auxi.copy_to_clipboard(entryRatio))
+                                 command=lambda: auxi.copy_to_clipboard(entry_ratio))
     copy_buttonRatio.pack(side='left')
 
     buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='#37dea1',
@@ -500,7 +504,8 @@ def set_canvas_size():
 
         if not canvas_resolution_h or not canvas_resolution_w:
             update_label(result_label, translations["err_canvas_resize"], 'red')
-        elif int(canvas_resolution_h) > root.winfo_screenwidth() or int(canvas_resolution_h) > root.winfo_screenheight():
+        elif int(canvas_resolution_h) > root.winfo_screenwidth() or int(
+                canvas_resolution_h) > root.winfo_screenheight():
             update_label(result_label, translations["err_canvas_resize_window"], 'red')
         else:
             clear_result_label()
@@ -509,7 +514,8 @@ def set_canvas_size():
 
             canvas.destroy()
 
-            canvas = ResizableCanvas.ResizableCanvas(canvas_frame, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg=config.CANVAS_BACKGROUND_COLOR)
+            canvas = ResizableCanvas.ResizableCanvas(canvas_frame, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
+                                                     bg=config.CANVAS_BACKGROUND_COLOR)
             canvas.pack()
 
     except IndexError:
@@ -548,13 +554,15 @@ root.focus_set()
 def disable_entries(event):
     entryX.config(state='disabled')
     entryY.config(state='disabled')
-    entryRatio.config(state='disabled')
+    if config.ENABLE_ASPECT_RATIO_INPUT:
+        entry_ratio.config(state='disabled')
 
 
 def enable_entries(event):
     entryX.config(state='normal')
     entryY.config(state='normal')
-    entryRatio.config(state='normal')
+    if config.ENABLE_ASPECT_RATIO_INPUT:
+        entry_ratio.config(state='normal')
 
 
 canvas.bind("<Enter>", disable_entries)

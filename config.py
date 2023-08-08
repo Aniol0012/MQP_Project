@@ -20,7 +20,7 @@ CIRCLE_HEIGHT = 150  # Default 150
 MAXIMIZED_WINDOW = True  # Default: True
 
 # Añadir una relacion de aspecto debajo de los cuadrados
-ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
+ENABLE_ASPECT_RATIO_INPUT = False  # Default: True
 
 # Mostrar un punto rojo en la esquina inferior derecha del canvas para redimensionarlo
 SHOW_RED_DOT_CANVAS = True  # Default: True
