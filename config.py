@@ -29,7 +29,7 @@ SHOW_RED_DOT_CANVAS = True  # Default: True
 RESULT_DECIMAL_PRECISION = 2  # Default: 2
 
 # En que pantalla se debe abrir la pantalla principal
-SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la primera
+SCREEN_TO_OPEN_ROOT = 0  # 1 Para la segunda pantalla y 0 para la primera
 
 # En que pantalla se debe abrir la pantalla espejo
 SCREEN_TO_OPEN_MIRROR = 1  # 1 Para la segunda pantalla y 0 para la primera
