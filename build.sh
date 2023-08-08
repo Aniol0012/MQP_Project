@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sed -i 's/SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la primera/SCREEN_TO_OPEN_ROOT = 0  # 1 Para la segunda pantalla y 0 para la primera/g' config.py
+
 help_panel() {
     echo "Uso: $0 [nombre del ejecutable] [-h] [-s]"
     echo "  -h: Muestra este panel de ayuda."
@@ -69,3 +71,5 @@ if [[ $stable = true ]]; then
 fi
 
 rm -rf build dist output main.spec
+
+sed -i 's/SCREEN_TO_OPEN_ROOT = 0  # 1 Para la segunda pantalla y 0 para la primera/SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la primera/g' config.py
