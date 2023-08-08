@@ -21,7 +21,7 @@ translations = {
     "no_divide_zero": "No puedes dividir por 0",
     "err_msg": "Se han introducido valores incorrectos",
     "too_big_message": "Los valores introducidos son demasiado grandes",
-    "absolute_pos": "Posicion absoluta",
+    "absolute_pos": "Posición absoluta",
     "save_bt": "Guardar",
     "load_bt": "Cargar",
     "delete_bt": "Eliminar archivo",
@@ -38,4 +38,7 @@ translations = {
     "remove_img": "Eliminar imagen",
     "suc_load_img": "Se ha cargado la imagen: ",
     "err_load_img": "No se ha cargado ninguna imagen",
+    "set_canvas_size": "Establecer tamaño del canvas",
+    "err_canvas_resize": "Debes introducir un tamaño del canvas en el input X e Y",
+    "err_canvas_resize_window": "El valor introducido es demasiado grande",
 }

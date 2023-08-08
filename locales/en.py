@@ -38,4 +38,7 @@ translations = {
     "remove_img": "Delete imatge",
     "suc_load_img": "The following image has been loaded: ",
     "err_load_img": "No image uploaded",
+    "set_canvas_size": "Set canvas size",
+    "err_canvas_resize": "You must introduce a valid size in X and Y inputs",
+    "err_canvas_resize_window": "The introduced value is too big",
 }

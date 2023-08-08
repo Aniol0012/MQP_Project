@@ -38,4 +38,7 @@ translations = {
     "remove_img": "Eliminar imatge",
     "suc_load_img": "S'ha carregat l'imatge: ",
     "err_load_img": "No s'ha carregat cap imatge",
+    "set_canvas_size": "Establir mida del canvas",
+    "err_canvas_resize": "Has d'introduir una mida del canvas en l'entrada X i Y",
+    "err_canvas_resize_window": "El valor introduït és massa gran",
 }
