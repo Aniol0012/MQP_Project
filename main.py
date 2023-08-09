@@ -116,7 +116,6 @@ def calculate_aspect_ratio():
         else:
             fraction_str = str(fraction).replace("/", ":")
         update_label(result_label, auxi.get_aspect_ratio_message(fraction_str, result))
-        # update_label(result_label, translations["aspect_ratio_msg"])
     except ValueError:
         update_label(result_label, translations["err_msg"], "red")
     except ZeroDivisionError:
@@ -171,15 +170,15 @@ def clear_mirror_canvas():
 
 
 def concatenate_canvas_wh():
-    return " (max: " + str(CANVAS_WIDTH) + "x" + str(CANVAS_HEIGHT) + ")"
+    return " (max: " + str(canvas.winfo_width()) + "x" + str(canvas.winfo_height()) + ")"
 
 
 def insert_rectangle():
     color = get_color()
     try:
-        if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
-            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
-                                                                  50 + int(entryY.get()),
+        if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
+            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + float(entryX.get()),
+                                                                  50 + float(entryY.get()),
                                                                   fill=color,
                                                                   width=5)
             rectangles.append(new_rectangle)
@@ -196,9 +195,9 @@ def insert_rectangle():
 def insert_oval():
     color = get_color()
     try:
-        if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
-            new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + int(entryX.get()),
-                                                         50 + int(entryY.get()),
+        if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
+            new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + float(entryX.get()),
+                                                         50 + float(entryY.get()),
                                                          fill=color,
                                                          width=5)
             ovals.append(new_circle)
@@ -570,7 +569,7 @@ def set_canvas_size():
 
         if not canvas_resolution_h or not canvas_resolution_w:
             update_label(result_label, translations["err_canvas_resize"], 'red')
-        elif int(canvas_resolution_h) > root.winfo_screenwidth() or int(
+        elif float(canvas_resolution_h) > root.winfo_screenwidth() or float(
                 canvas_resolution_h) > root.winfo_screenheight():
             update_label(result_label, translations["err_canvas_resize_window"], 'red')
         else:
