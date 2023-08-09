@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 from figures import ResizableRectangle
+from figures import ResizableTriangle
 from figures import ResizableCircle
 from figures import ResizableCanvas
 import os
@@ -119,6 +120,7 @@ def calculate_aspect_ratio():
 
 
 rectangles = []
+triangles = []
 ovals = []
 
 
@@ -241,11 +243,25 @@ def add_rectangle():
         new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
                                                               50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
     else:
-        new_rectangle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
+        new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
     rectangles.append(new_rectangle)
     create_mirror_rectangle(new_rectangle, color)
 
     globals.last_touched_figure = new_rectangle
+
+
+def add_triangle():
+    clear_result_label()
+    color = random.choice(list(COLORS.values()))
+    if config.TRIANGLE_WIDTH <= CANVAS_WIDTH and config.TRIANGLE_HEIGHT <= CANVAS_HEIGHT:
+        new_triangle = ResizableTriangle.ResizableTriangle(canvas, 50, 50, 50 + config.TRIANGLE_WIDTH,
+                                                              50 + config.TRIANGLE_HEIGHT, fill=color, width=5)
+    else:
+        new_triangle = ResizableTriangle.ResizableTriangle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    rectangles.append(new_triangle)
+    create_mirror_rectangle(new_triangle, color)
+
+    globals.last_touched_figure = new_triangle
 
 
 def remove_oval():
@@ -309,6 +325,12 @@ def create_mirror_window():
         color = canvas.itemcget(rectangle.id, "fill")
         mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
         rectangle.mirror_figures.append(mirror_rectangle)
+
+    for triangle in triangles:
+        x1, y1, x2, y2, x3, y3 = canvas.coords(triangle.id)
+        color = canvas.itemcget(triangle.id, "fill")
+        mirror_triangle = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        triangle.mirror_figures.append(mirror_triangle)
 
     for oval in ovals:
         x1, y1, x2, y2 = canvas.coords(oval.id)
@@ -481,24 +503,32 @@ add_rectangle_bt = tk.Button(button_frame, text=translations["add_rect"], comman
                              width=config.BT_WIDTH)
 add_rectangle_bt.grid(row=0, column=1, padx=config.PADX)
 
+# TODO: Actualizar el label del triangulo
+# TODO: Poner un nombre con idioma al triangulo
+add_triangle_bt = tk.Button(button_frame, text="Añadir triangulo", command=add_triangle, bg='orange',
+                             height=config.BT_HEIGHT,
+                             width=config.BT_WIDTH)
+
+add_triangle_bt.grid(row=0, column=2, padx=config.PADX)
+
 add_circle_bt = tk.Button(button_frame, text=translations["add_oval"], command=add_circle, bg='green',
                           height=config.BT_HEIGHT,
                           width=config.BT_WIDTH)
-add_circle_bt.grid(row=0, column=2, padx=config.PADX)
+add_circle_bt.grid(row=0, column=3, padx=config.PADX)
 
 remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command=remove_rectangle, bg='#F37D70',
                              height=config.BT_HEIGHT,
                              width=config.BT_WIDTH)
-remove_figure_bt.grid(row=0, column=3, padx=config.PADX)
+remove_figure_bt.grid(row=0, column=4, padx=config.PADX)
 
 load_canvas_img_bt = tk.Button(button_frame, text=translations["load_img"],
                                command=lambda: load_canvas_image(canvas, root),
                                bg='yellow', height=config.BT_HEIGHT, width=config.BT_WIDTH)
-load_canvas_img_bt.grid(row=0, column=4, padx=config.PADX)
+load_canvas_img_bt.grid(row=0, column=5, padx=config.PADX)
 
 remove_canvas_img_bt = tk.Button(button_frame, text=translations["remove_img"], command=delete_canvas_image,
                                  bg='#de6137', height=config.BT_HEIGHT, width=config.BT_WIDTH)
-remove_canvas_img_bt.grid(row=0, column=5, padx=config.PADX)
+remove_canvas_img_bt.grid(row=0, column=6, padx=config.PADX)
 
 
 def set_canvas_size():
@@ -529,7 +559,7 @@ def set_canvas_size():
 
 set_canvas_size_bt = tk.Button(button_frame, text=translations["set_canvas_size"], command=set_canvas_size,
                                bg='purple', height=config.BT_HEIGHT, width=25)
-set_canvas_size_bt.grid(row=0, column=6, padx=config.PADX)
+set_canvas_size_bt.grid(row=0, column=7, padx=config.PADX)
 
 
 def create_toggle():
@@ -537,7 +567,7 @@ def create_toggle():
     toggle_button = tk.Checkbutton(button_frame, text=translations["absolute_pos"], variable=button_var,
                                    command=toggle_bt, onvalue=1, offvalue=0, height=config.BT_HEIGHT,
                                    width=config.BT_WIDTH, bg='pink')
-    toggle_button.grid(row=0, column=7, padx=config.PADX)
+    toggle_button.grid(row=0, column=8, padx=config.PADX)
 
 
 canvas_frame = tk.Frame(root)

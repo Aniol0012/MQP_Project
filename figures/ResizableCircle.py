@@ -62,7 +62,6 @@ class ResizableCircle:
         self.resizing = False
         self.update_aspect_ratio()
 
-
     def update_aspect_ratio(self):
         x1, y1, x2, y2 = self.get_coords()
         width = abs(x2 - x1)

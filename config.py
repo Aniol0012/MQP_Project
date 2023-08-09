@@ -16,6 +16,10 @@ RECTANGLE_HEIGHT = 150  # Default 150
 CIRCLE_WIDTH = 150  # Default: 150
 CIRCLE_HEIGHT = 150  # Default 150
 
+# Dimensiones del triángulo por defecto que deben de ser inferiores a las del canvas
+TRIANGLE_WIDTH = 150  # Default: 150
+TRIANGLE_HEIGHT = 150  # Default 150
+
 # Abrir la ventana maximizada
 MAXIMIZED_WINDOW = True  # Default: True
 
