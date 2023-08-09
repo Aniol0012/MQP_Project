@@ -18,6 +18,7 @@ import globals
 import movment
 
 # TODO: Ventana para modificar la configuración
+# TODO: Fixar bug triangulo en la ventana espejo
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -132,6 +133,8 @@ def clear():
     entryY.delete(0, tk.END)
     if config.ENABLE_ASPECT_RATIO_INPUT:
         entry_ratio.delete(0, tk.END)
+    if not globals.mirror_window.winfo_exists():
+        toggle_button.grid_forget()
     remove_figures()
     clear_mirror_canvas()
     clear_result_label()
@@ -163,7 +166,7 @@ def remove_figures():
 
 
 def clear_mirror_canvas():
-    if globals.mirror_window is not None:
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
         mirror_canvas = globals.mirror_window.winfo_children()[0]
         mirror_canvas.delete("all")
         canvas.delete("all")
