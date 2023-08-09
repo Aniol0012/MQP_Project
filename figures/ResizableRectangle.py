@@ -1,6 +1,7 @@
 import fractions
 import auxi
 import globals
+import config
 
 
 class ResizableRectangle:
@@ -32,22 +33,46 @@ class ResizableRectangle:
             self.resizing = None
 
     def on_drag(self, event):
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
         x1, y1, x2, y2 = self.get_coords()
 
         if self.resizing:
             if self.resizing == 'top-left':
-                x1, y1 = event.x, event.y
+                x1, y1 = max(0, event.x), max(0, event.y)
             elif self.resizing == 'top-right':
-                x2, y1 = event.x, event.y
+                x2, y1 = min(canvas_width, event.x), max(0, event.y)
             elif self.resizing == 'bottom-left':
-                x1, y2 = event.x, event.y
+                x1, y2 = max(0, event.x), min(canvas_height, event.y)
             elif self.resizing == 'bottom-right':
-                x2, y2 = event.x, event.y
+                x2, y2 = min(canvas_width, event.x), min(canvas_height, event.y)
+
+            x1 = max(0, x1)
+            y1 = max(0, y1)
+            x2 = min(canvas_width, x2)
+            y2 = min(canvas_height, y2)
 
             self.canvas.coords(self.id, x1, y1, x2, y2)
         else:
             dx = event.x - self.press[0]
             dy = event.y - self.press[1]
+
+            new_x1 = x1 + dx
+            new_y1 = y1 + dy
+            new_x2 = x2 + dx
+            new_y2 = y2 + dy
+
+            if config.ENABLE_CANVAS_LIMIT:
+                if new_x1 < 0:
+                    dx -= new_x1
+                if new_y1 < 0:
+                    dy -= new_y1
+                if new_x2 > canvas_width:
+                    dx -= (new_x2 - canvas_width)
+                if new_y2 > canvas_height:
+                    dy -= (new_y2 - canvas_height)
+
             self.canvas.move(self.id, dx, dy)
             self.press = (event.x, event.y)
 

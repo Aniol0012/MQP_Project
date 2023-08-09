@@ -1,6 +1,7 @@
 import fractions
 import auxi
 import globals
+import config
 
 
 class ResizableTriangle:
@@ -19,17 +20,21 @@ class ResizableTriangle:
         globals.last_touched_figure = self
         self.press = (event.x, event.y)
         x1, y1, x2, y2, x3, y3 = self.get_coords()
+        tolerance = 15
 
-        if abs(x1 - event.x) < 10 and abs(y1 - event.y) < 10:
+        if abs(x1 - event.x) < 10 and abs(y1 - event.y) < tolerance:
             self.resizing = 'v1'
-        elif abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
+        elif abs(x2 - event.x) < 10 and abs(y2 - event.y) < tolerance:
             self.resizing = 'v2'
-        elif abs(x3 - event.x) < 10 and abs(y3 - event.y) < 10:
+        elif abs(x3 - event.x) < 10 and abs(y3 - event.y) < tolerance:
             self.resizing = 'v3'
         else:
             self.resizing = None
 
     def on_drag(self, event):
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
         x1, y1, x2, y2, x3, y3 = self.get_coords()
 
         if self.resizing:
@@ -39,10 +44,39 @@ class ResizableTriangle:
                 x2, y2 = event.x, event.y
             elif self.resizing == 'v3':
                 x3, y3 = event.x, event.y
+
+            if config.ENABLE_CANVAS_LIMIT:
+                x1 = max(0, min(canvas_width, x1))
+                y1 = max(0, min(canvas_height, y1))
+                x2 = max(0, min(canvas_width, x2))
+                y2 = max(0, min(canvas_height, y2))
+                x3 = max(0, min(canvas_width, x3))
+                y3 = max(0, min(canvas_height, y3))
+
             self.canvas.coords(self.id, x1, y1, x2, y2, x3, y3)
         else:
             dx = event.x - self.press[0]
             dy = event.y - self.press[1]
+
+            new_x1, new_y1 = x1 + dx, y1 + dy
+            new_x2, new_y2 = x2 + dx, y2 + dy
+            new_x3, new_y3 = x3 + dx, y3 + dy
+
+            if config.ENABLE_CANVAS_LIMIT:
+                min_x = min(new_x1, new_x2, new_x3)
+                max_x = max(new_x1, new_x2, new_x3)
+                min_y = min(new_y1, new_y2, new_y3)
+                max_y = max(new_y1, new_y2, new_y3)
+
+                if min_x < 0:
+                    dx -= min_x
+                if min_y < 0:
+                    dy -= min_y
+                if max_x > canvas_width:
+                    dx -= (max_x - canvas_width)
+                if max_y > canvas_height:
+                    dy -= (max_y - canvas_height)
+
             self.canvas.move(self.id, dx, dy)
             self.press = (event.x, event.y)
 

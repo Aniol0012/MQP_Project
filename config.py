@@ -26,6 +26,9 @@ MAXIMIZED_WINDOW = True  # Default: True
 # Añadir una relacion de aspecto debajo de los cuadrados
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 
+# Prohibir que las figuras se salgan del canvas
+ENABLE_CANVAS_LIMIT = True  # Default: True
+
 # Mostrar un punto rojo en la esquina inferior derecha del canvas para redimensionarlo
 SHOW_RED_DOT_CANVAS = True  # Default: True
 

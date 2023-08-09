@@ -1,6 +1,7 @@
 import fractions
 import auxi
 import globals
+import config
 
 
 class ResizableCircle:
@@ -29,6 +30,9 @@ class ResizableCircle:
             self.resizing = False
 
     def on_drag(self, event):
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
         if self.resizing:
             x1, y1, x2, y2 = self.get_coords()
             center_x, center_y = (x1 + x2) / 2, (y1 + y2) / 2
@@ -37,12 +41,36 @@ class ResizableCircle:
             new_x1, new_y1 = center_x - new_radius, center_y - new_radius
             new_x2, new_y2 = center_x + new_radius, center_y + new_radius
 
+            if config.ENABLE_CANVAS_LIMIT:
+                new_x1 = max(0, new_x1)
+                new_y1 = max(0, new_y1)
+                new_x2 = min(canvas_width, new_x2)
+                new_y2 = min(canvas_height, new_y2)
+
             self.canvas.coords(self.id, new_x1, new_y1, new_x2, new_y2)
         else:
             dx = event.x - self.press[0]
             dy = event.y - self.press[1]
+
+            x1, y1, x2, y2 = self.get_coords()
+            new_x1 = x1 + dx
+            new_y1 = y1 + dy
+            new_x2 = x2 + dx
+            new_y2 = y2 + dy
+
+            if config.ENABLE_CANVAS_LIMIT:
+                if new_x1 < 0:
+                    dx -= new_x1
+                if new_y1 < 0:
+                    dy -= new_y1
+                if new_x2 > canvas_width:
+                    dx -= (new_x2 - canvas_width)
+                if new_y2 > canvas_height:
+                    dy -= (new_y2 - canvas_height)
+
             self.canvas.move(self.id, dx, dy)
             self.press = (event.x, event.y)
+
         self.update_aspect_ratio()
 
     def on_release(self, event):
