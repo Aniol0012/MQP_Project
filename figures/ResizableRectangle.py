@@ -19,42 +19,38 @@ class ResizableRectangle:
         globals.last_touched_figure = self
         self.press = (event.x, event.y)
         x1, y1, x2, y2 = self.get_coords()
-        if abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
-            self.resizing = True
+
+        if abs(x1 - event.x) < 10 and abs(y1 - event.y) < 10:
+            self.resizing = 'top-left'
+        elif abs(x2 - event.x) < 10 and abs(y1 - event.y) < 10:
+            self.resizing = 'top-right'
+        elif abs(x1 - event.x) < 10 and abs(y2 - event.y) < 10:
+            self.resizing = 'bottom-left'
+        elif abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
+            self.resizing = 'bottom-right'
+        else:
+            self.resizing = None
 
     def on_drag(self, event):
+        x1, y1, x2, y2 = self.get_coords()
+
         if self.resizing:
-            x1, y1, x2, y2 = self.get_coords()
-            new_x2, new_y2 = event.x, event.y
-            canvas_width = self.canvas.winfo_width()
-            canvas_height = self.canvas.winfo_height()
-            if new_x2 < 0:
-                new_x2 = 0
-            elif new_x2 > canvas_width:
-                new_x2 = canvas_width
-            if new_y2 < 0:
-                new_y2 = 0
-            elif new_y2 > canvas_height:
-                new_y2 = canvas_height
-            self.canvas.coords(self.id, x1, y1, new_x2, new_y2)
+            if self.resizing == 'top-left':
+                x1, y1 = event.x, event.y
+            elif self.resizing == 'top-right':
+                x2, y1 = event.x, event.y
+            elif self.resizing == 'bottom-left':
+                x1, y2 = event.x, event.y
+            elif self.resizing == 'bottom-right':
+                x2, y2 = event.x, event.y
+
+            self.canvas.coords(self.id, x1, y1, x2, y2)
         else:
             dx = event.x - self.press[0]
             dy = event.y - self.press[1]
-            x1, y1, x2, y2 = self.get_coords()
-            new_x1, new_y1 = x1 + dx, y1 + dy
-            new_x2, new_y2 = x2 + dx, y2 + dy
-            canvas_width = self.canvas.winfo_width()
-            canvas_height = self.canvas.winfo_height()
-            if new_x1 < 0:
-                dx = -x1
-            elif new_x2 > canvas_width:
-                dx = canvas_width - x2
-            if new_y1 < 0:
-                dy = -y1
-            elif new_y2 > canvas_height:
-                dy = canvas_height - y2
             self.canvas.move(self.id, dx, dy)
             self.press = (event.x, event.y)
+
         self.update_aspect_ratio()
         self.update_mirror_figures()
 
