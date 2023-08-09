@@ -81,7 +81,8 @@ def update_language():
     update_label(add_rectangle_bt, translations["add_rect"])
     update_label(add_circle_bt, translations["add_oval"])
     update_label(remove_figure_bt, translations["del_fig"])
-    update_label(buttonRatio, translations["calc_rest_value"])
+    if config.ENABLE_ASPECT_RATIO_INPUT:
+        update_label(button_ratio, translations["calc_rest_value"])
     if toggle_button is not None:
         update_label(toggle_button, translations["absolute_pos"])
     update_label(save_bt, translations["save_bt"], "green")
@@ -124,7 +125,8 @@ ovals = []
 def clear():
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
-    entry_ratio.delete(0, tk.END)
+    if config.ENABLE_ASPECT_RATIO_INPUT:
+        entry_ratio.delete(0, tk.END)
     remove_figures()
     clear_mirror_canvas()
     clear_result_label()
@@ -220,6 +222,7 @@ def calculate_remaining_value():
 
 
 def add_circle():
+    clear_result_label()
     color = random.choice(list(COLORS.values()))
     if config.CIRCLE_WIDTH <= CANVAS_WIDTH and config.CIRCLE_HEIGHT <= CANVAS_HEIGHT:
         new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + config.CIRCLE_WIDTH,
@@ -232,6 +235,7 @@ def add_circle():
 
 
 def add_rectangle():
+    clear_result_label()
     color = random.choice(list(COLORS.values()))
     if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
         new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
@@ -245,6 +249,7 @@ def add_rectangle():
 
 
 def remove_oval():
+    clear_result_label()
     if ovals:
         try:
             if globals.last_touched_figure is not None:
@@ -447,14 +452,14 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
     entry_ratio = tk.Entry(entry_frameRatio, bd=2, width=30)
     entry_ratio.pack(side='left', padx=config.PADX)
 
-    copy_buttonRatio = tk.Button(entry_frameRatio, text=translations["copy"],
+    copy_button_ratio = tk.Button(entry_frameRatio, text=translations["copy"],
                                  command=lambda: auxi.copy_to_clipboard(entry_ratio))
-    copy_buttonRatio.pack(side='left')
+    copy_button_ratio.pack(side='left')
 
-    buttonRatio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='#37dea1',
-                            height=config.BT_HEIGHT,
-                            width=config.BT_WIDTH + 5)
-    buttonRatio.pack(pady=10)
+    button_ratio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='#37dea1',
+                             height=config.BT_HEIGHT,
+                             width=config.BT_WIDTH + 5)
+    button_ratio.pack(pady=10)
 
 button_var = tk.IntVar()
 
