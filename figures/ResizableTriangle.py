@@ -1,15 +1,12 @@
 import fractions
 import auxi
 import globals
-import math
 
 
 class ResizableTriangle:
-    def __init__(self, canvas, x1, y1, x2, y2, **kwargs):
+    def __init__(self, canvas, x1, y1, x2, y2, x3, y3, **kwargs):
         self.canvas = canvas
-        x3 = (x1 + x2) / 2
-        y3 = y1 - abs(y2 - y1) * math.sqrt(3) / 2
-        self.id = self.canvas.create_polygon(x1, y1, x2, y2, x3, y3, outline='black', **kwargs)  # Añadido borde negro
+        self.id = self.canvas.create_polygon(x1, y1, x2, y2, x3, y3, outline='black', **kwargs)
         self.original_coords = (x1, y1, x2, y2, x3, y3)
         self.canvas.tag_bind(self.id, '<Button-1>', self.on_press)
         self.canvas.tag_bind(self.id, '<B1-Motion>', self.on_drag)
@@ -22,7 +19,7 @@ class ResizableTriangle:
         globals.last_touched_figure = self
         self.press = (event.x, event.y)
         x1, y1, x2, y2, x3, y3 = self.get_coords()
-        # Detectar qué vértice se está tocando
+
         if abs(x1 - event.x) < 10 and abs(y1 - event.y) < 10:
             self.resizing = 'v1'
         elif abs(x2 - event.x) < 10 and abs(y2 - event.y) < 10:
@@ -76,18 +73,28 @@ class ResizableTriangle:
     def update_aspect_ratio(self):
         try:
             x1, y1, x2, y2, x3, y3 = self.get_coords()
-            width = abs(x2 - x1)
-            height = abs(y2 - y1)
+
+            min_x = min(x1, x2, x3)
+            max_x = max(x1, x2, x3)
+            min_y = min(y1, y2, y3)
+            max_y = max(y1, y2, y3)
+
+            width = max_x - min_x
+            height = max_y - min_y
+
             if height != 0:
-                aspect_ratio = width / height if height != 0 else 0
+                aspect_ratio = width / height
                 fraction = fractions.Fraction(int(width), int(height))
-                if fraction.denominator == 1:
-                    fraction_str = f"{fraction.numerator}:1"
-                else:
-                    fraction_str = str(fraction).replace("/", ":")
-                globals.aspect_ratio_label.config(
-                    text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
+                fraction_str = str(fraction).replace("/", ":")
+            else:
+                aspect_ratio = float('inf')
+                fraction_str = "Indefinido"
+
+            globals.aspect_ratio_label.config(
+                text=auxi.get_aspect_ratio_message2(fraction_str, aspect_ratio, width, height))
         except ValueError:
+            pass
+        except ZeroDivisionError:
             pass
 
     def reset(self):

@@ -29,6 +29,9 @@ ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 # Mostrar un punto rojo en la esquina inferior derecha del canvas para redimensionarlo
 SHOW_RED_DOT_CANVAS = True  # Default: True
 
+# Al crear una figura que el color sea aleatorio
+RANDOM_COLOR = False  # Default: False
+
 # Precision de decimales del resultado
 RESULT_DECIMAL_PRECISION = 2  # Default: 2
 

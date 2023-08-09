@@ -8,6 +8,7 @@ from figures import ResizableCanvas
 import os
 import sys
 import fractions
+import math
 import random
 import importlib
 import pickle
@@ -80,6 +81,7 @@ def update_language():
     update_label(insert_oval_bt, translations["insert_oval"])
     update_label(clear_button, translations["clear"])
     update_label(add_rectangle_bt, translations["add_rect"])
+    update_label(add_triangle_bt, translations["add_tri"])
     update_label(add_circle_bt, translations["add_oval"])
     update_label(remove_figure_bt, translations["del_fig"])
     if config.ENABLE_ASPECT_RATIO_INPUT:
@@ -139,6 +141,13 @@ def clear_canvas():
     clear_mirror_canvas()
 
 
+def get_color():
+    if config.RANDOM_COLOR:
+        return random.choice(list(COLORS.values()))
+    else:
+        return COLORS[selected_color.get()]
+
+
 def remove_figures():
     try:
         for rectangleCanvas in rectangles.copy():
@@ -164,7 +173,7 @@ def concatenate_canvas_wh():
 
 
 def insert_rectangle():
-    color = random.choice(list(COLORS.values()))
+    color = get_color()
     try:
         if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
             new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + int(entryX.get()),
@@ -183,7 +192,7 @@ def insert_rectangle():
 
 
 def insert_oval():
-    color = random.choice(list(COLORS.values()))
+    color = get_color()
     try:
         if int(entryX.get()) <= CANVAS_WIDTH and int(entryY.get()) <= CANVAS_HEIGHT:
             new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + int(entryX.get()),
@@ -225,7 +234,11 @@ def calculate_remaining_value():
 
 def add_circle():
     clear_result_label()
-    color = random.choice(list(COLORS.values()))
+    color = get_color()
+
+    CANVAS_WIDTH = canvas.winfo_width()
+    CANVAS_HEIGHT = canvas.winfo_height()
+
     if config.CIRCLE_WIDTH <= CANVAS_WIDTH and config.CIRCLE_HEIGHT <= CANVAS_HEIGHT:
         new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + config.CIRCLE_WIDTH,
                                                      50 + config.CIRCLE_HEIGHT, fill=color, width=5)
@@ -238,7 +251,11 @@ def add_circle():
 
 def add_rectangle():
     clear_result_label()
-    color = random.choice(list(COLORS.values()))
+    color = get_color()
+
+    CANVAS_WIDTH = canvas.winfo_width()
+    CANVAS_HEIGHT = canvas.winfo_height()
+
     if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
         new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
                                                               50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
@@ -252,15 +269,22 @@ def add_rectangle():
 
 def add_triangle():
     clear_result_label()
-    color = random.choice(list(COLORS.values()))
-    if config.TRIANGLE_WIDTH <= CANVAS_WIDTH and config.TRIANGLE_HEIGHT <= CANVAS_HEIGHT:
-        new_triangle = ResizableTriangle.ResizableTriangle(canvas, 50, 50, 50 + config.TRIANGLE_WIDTH,
-                                                              50 + config.TRIANGLE_HEIGHT, fill=color, width=5)
-    else:
-        new_triangle = ResizableTriangle.ResizableTriangle(canvas, 50, 50, 200, 200, fill=color, width=5)
-    rectangles.append(new_triangle)
-    create_mirror_rectangle(new_triangle, color)
+    color = get_color()
 
+    CANVAS_WIDTH = canvas.winfo_width()
+    CANVAS_HEIGHT = canvas.winfo_height()
+
+    center_x, center_y = CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2
+    half_triangle_width = config.TRIANGLE_WIDTH / 2
+
+    x1, y1 = center_x - half_triangle_width, center_y + half_triangle_width * math.sqrt(3) / 2
+    x2, y2 = center_x + half_triangle_width, center_y + half_triangle_width * math.sqrt(3) / 2
+    x3, y3 = center_x, center_y - config.TRIANGLE_WIDTH * math.sqrt(3) / 2
+
+    new_triangle = ResizableTriangle.ResizableTriangle(canvas, x1, y1, x2, y2, x3, y3, fill=color, width=5)
+    rectangles.append(new_triangle)
+
+    create_mirror_rectangle(new_triangle, color)
     globals.last_touched_figure = new_triangle
 
 
@@ -297,20 +321,19 @@ def remove_rectangle():
 
 
 def change_color(value):
-    if globals.last_touched_figure is not None:
+    if globals.last_touched_figure:
         globals.last_touched_figure.set_fill_color(COLORS[value])
 
-    if globals.mirror_window is not None:
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
         for mirror_figure in globals.last_touched_figure.mirror_figures:
-            color = canvas.itemcget(rectangle.id, "fill")
+            color = canvas.itemcget(globals.last_touched_figure.id, "fill")
             mirror_figure.canvas.itemconfig(mirror_figure.id, fill=color)
 
 
 def create_mirror_window():
-    if globals.mirror_window is not None:
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
         globals.mirror_window.destroy()
 
-    # Config de la nueva ventana
     globals.mirror_window = tk.Toplevel(root)
     globals.mirror_window.title("")
     globals.mirror_window.state('zoomed')
@@ -321,15 +344,22 @@ def create_mirror_window():
     mirror_canvas.pack(anchor='nw')
 
     for rectangle in rectangles:
-        x1, y1, x2, y2 = canvas.coords(rectangle.id)
+        coords = canvas.coords(rectangle.id)
+        if len(coords) == 4:
+            x1, y1, x2, y2 = coords
+        elif len(coords) == 6:
+            x1, y1, x2, y2, x3, y3 = coords
+        else:
+            print(f"Error: Número inesperado de coordenadas: {coords}")
+            continue
         color = canvas.itemcget(rectangle.id, "fill")
         mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
         rectangle.mirror_figures.append(mirror_rectangle)
 
     for triangle in triangles:
-        x1, y1, x2, y2, x3, y3 = canvas.coords(triangle.id)
+        x1, y1, x2, y2 = canvas.coords(triangle.id)
         color = canvas.itemcget(triangle.id, "fill")
-        mirror_triangle = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        mirror_triangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
         triangle.mirror_figures.append(mirror_triangle)
 
     for oval in ovals:
@@ -341,7 +371,7 @@ def create_mirror_window():
 
 
 def create_mirror_rectangle(new_rectangle, color):
-    if globals.mirror_window is not None:
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
         mirror_canvas = globals.mirror_window.winfo_children()[0]
         x = int(entryX.get()) if entryX.get() else config.RECTANGLE_WIDTH
         y = int(entryY.get()) if entryY.get() else config.RECTANGLE_HEIGHT
@@ -475,10 +505,11 @@ if config.ENABLE_ASPECT_RATIO_INPUT:
     entry_ratio.pack(side='left', padx=config.PADX)
 
     copy_button_ratio = tk.Button(entry_frameRatio, text=translations["copy"],
-                                 command=lambda: auxi.copy_to_clipboard(entry_ratio))
+                                  command=lambda: auxi.copy_to_clipboard(entry_ratio))
     copy_button_ratio.pack(side='left')
 
-    button_ratio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value, bg='#37dea1',
+    button_ratio = tk.Button(root, text=translations["calc_rest_value"], command=calculate_remaining_value,
+                             bg='#37dea1',
                              height=config.BT_HEIGHT,
                              width=config.BT_WIDTH + 5)
     button_ratio.pack(pady=10)
@@ -503,11 +534,9 @@ add_rectangle_bt = tk.Button(button_frame, text=translations["add_rect"], comman
                              width=config.BT_WIDTH)
 add_rectangle_bt.grid(row=0, column=1, padx=config.PADX)
 
-# TODO: Actualizar el label del triangulo
-# TODO: Poner un nombre con idioma al triangulo
-add_triangle_bt = tk.Button(button_frame, text="Añadir triangulo", command=add_triangle, bg='orange',
-                             height=config.BT_HEIGHT,
-                             width=config.BT_WIDTH)
+add_triangle_bt = tk.Button(button_frame, text=translations["add_tri"], command=add_triangle, bg='#39DAEE',
+                            height=config.BT_HEIGHT,
+                            width=config.BT_WIDTH)
 
 add_triangle_bt.grid(row=0, column=2, padx=config.PADX)
 
