@@ -1,6 +1,8 @@
 .DS_Store
 .idea/
 __pycache__/
+locales/__pycache__/
+figures/__pycache__/
 venv
 dist
 build

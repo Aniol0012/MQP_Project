@@ -17,6 +17,8 @@ import auxi
 import globals
 import movment
 
+# TODO: Ventana para modificar la configuración
+
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
 CANVAS_WIDTH = config.CANVAS_WIDTH
