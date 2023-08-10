@@ -139,5 +139,10 @@ class ResizableTriangle:
     def set_fill_color(self, color):
         self.canvas.itemconfig(self.id, fill=color)
 
+    def update(self):
+        x1, y1, x2, y2, x3, y3 = self.canvas.coords(self.id)
+        for mirror_triangle in self.mirror_triangle:
+            mirror_triangle.canvas.coords(mirror_triangle.id, x1, y1, x2, y2)
+
     def get_coords(self):
         return self.canvas.coords(self.id)

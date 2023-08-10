@@ -126,7 +126,7 @@ ovals = []
 def clear():
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
-    if config.ENABLE_ASPECT_RATIO_INPUT:
+    if entry_ratio.winfo_exists():
         entry_ratio.delete(0, tk.END)
     remove_figures()
     clear_mirror_canvas()
@@ -147,13 +147,19 @@ def get_color():
 
 def remove_figures():
     try:
-        for rectangleCanvas in rectangles.copy():
-            rectangleCanvas.canvas.delete(rectangleCanvas.id)
-            rectangles.remove(rectangleCanvas)
+        for rectangle in rectangles.copy():
+            rectangle.canvas.delete(rectangle.id)
+            rectangles.remove(rectangle)
 
-        for ovalCanvas in ovals.copy():
-            ovalCanvas.canvas.delete(ovalCanvas.id)
-            ovals.remove(ovalCanvas)
+        for triangle in triangles.copy():
+            triangle.canvas.delete(triangle.id)
+            triangles.remove(triangle)
+
+        for oval in ovals.copy():
+            oval.canvas.delete(oval.id)
+            ovals.remove(oval)
+
+        globals.last_touched_figure = None
     except ValueError:
         pass
 
@@ -290,53 +296,24 @@ def add_triangle():
 
 def remove_figure():
     clear_result_label()
-    if rectangles:
-        remove_rectangle()
-    elif triangles:
-        remove_triangle()
-    elif ovals:
-        remove_oval()
-
-
-def remove_rectangle():
     try:
-        if globals.last_touched_figure is not None:
-            rectangle_to_remove = globals.last_touched_figure
-        else:
-            rectangle_to_remove = rectangles[-1]
-        rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
-        rectangles.remove(rectangle_to_remove)
+        if globals.last_touched_figure:
+            figure_to_remove = globals.last_touched_figure
+            figure_to_remove.canvas.delete(figure_to_remove.id)
 
-        for mirror_rectangle in rectangle_to_remove.mirror_figures:
-            mirror_rectangle.canvas.delete(mirror_rectangle.id)
-    except ValueError:
-        pass
+            if isinstance(figure_to_remove, ResizableRectangle.ResizableRectangle):
+                rectangles.remove(figure_to_remove)
+            elif isinstance(figure_to_remove, ResizableTriangle.ResizableTriangle):
+                triangles.remove(figure_to_remove)
+            elif isinstance(figure_to_remove, ResizableCircle.ResizableCircle):
+                ovals.remove(figure_to_remove)
+            else:
+                print("La figura es de un tipo desconocido.")
 
+            for mirror_figure in figure_to_remove.mirror_figures:
+                mirror_figure.canvas.delete(mirror_figure.id)
 
-def remove_triangle():
-    try:
-        if globals.last_touched_figure is not None:
-            triangle_to_remove = globals.last_touched_figure
-        else:
-            triangle_to_remove = triangles[-1]
-        triangle_to_remove.canvas.delete(triangle_to_remove.id)
-        rectangles.remove(triangle_to_remove)
-
-        for mirror_triangle in triangle_to_remove.mirror_figures:
-            mirror_triangle.canvas.delete(mirror_triangle.id)
-    except ValueError:
-        pass
-
-
-def remove_oval():
-    clear_result_label()
-    try:
-        if globals.last_touched_figure is not None:
-            oval_to_remove = globals.last_touched_figure
-        else:
-            oval_to_remove = ovals[-1]
-        oval_to_remove.canvas.delete(oval_to_remove.id)
-        ovals.remove(oval_to_remove)
+            globals.last_touched_figure = None
     except ValueError:
         pass
 
