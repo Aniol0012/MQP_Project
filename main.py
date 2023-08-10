@@ -617,7 +617,6 @@ globals.aspect_ratio_label = tk.Label(root, text="", bg=config.BACKGROUND_COLOR)
 globals.aspect_ratio_label.pack()
 
 
-
 def disable_entries(event):
     entryX.config(state='disabled')
     entryY.config(state='disabled')
@@ -636,6 +635,7 @@ canvas.bind("<Enter>", disable_entries)
 canvas.bind("<Leave>", enable_entries)
 
 root.focus_set()
+
 
 def get_state():
     state = {
@@ -722,7 +722,8 @@ open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=op
 open_folder_bt.place(relx=0.97, rely=0.19, anchor="ne", width=110)
 
 if config.ENABLE_CONFIGURATION_BT:
-    config_bt = tk.Button(root, text="Configuración", command=lambda: config_menu.show_config(root, update_configurations),
+    config_bt = tk.Button(root, text="Configuración",
+                          command=lambda: config_menu.show_config(root, update_configurations),
                           fg="gray")
     config_bt.place(relx=0.97, rely=0.22, anchor="ne", width=110)
 
