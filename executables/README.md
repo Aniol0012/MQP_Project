@@ -1,7 +1,6 @@
-# MQP_Project
+# Guía para crear los ejecutables de la aplicación
 
-Los ejecutables creados con la herramienta de build.sh que se puede encontrar en el directorio previo a este se crearan
-aquí.
+Los ejecutables creados con la herramienta de **build.sh** que se puede encontrar en el directorio previo a este.
 
 Para crear un nuevo ejecutable se puede emplear los siguientes comandos:
 

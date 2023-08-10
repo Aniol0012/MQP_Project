@@ -60,7 +60,6 @@ def load_translations(language):
 
 
 def switch_language(value):
-    global translations
     if value == "Inglés":
         globals.language = "en"
     elif value == "Catalan":
@@ -86,7 +85,7 @@ def update_language():
     update_label(remove_figure_bt, translations["del_fig"])
     if config.ENABLE_ASPECT_RATIO_INPUT:
         update_label(button_ratio, translations["calc_rest_value"])
-    if toggle_button is not None:
+    if toggle_button:
         update_label(toggle_button, translations["absolute_pos"])
     update_label(save_bt, translations["save_bt"], "green")
     update_label(load_bt, translations["load_bt"], "#24a0ed")
@@ -130,8 +129,6 @@ def clear():
     entryY.delete(0, tk.END)
     if config.ENABLE_ASPECT_RATIO_INPUT:
         entry_ratio.delete(0, tk.END)
-    if toggle_button:
-        toggle_button.grid_forget()
     remove_figures()
     clear_mirror_canvas()
     clear_result_label()
