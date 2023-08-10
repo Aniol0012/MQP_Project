@@ -99,9 +99,11 @@ class ResizableTriangle:
                     new_y1 = y1 * mirror_canvas_height / canvas_height
                     new_x2 = x2 * mirror_canvas_width / canvas_width
                     new_y2 = y2 * mirror_canvas_height / canvas_height
-                    mirror_figure.canvas.coords(mirror_figure.id, new_x1, new_y1, new_x2, new_y2)
+                    new_x3 = x3 * mirror_canvas_width / canvas_width
+                    new_y3 = y3 * mirror_canvas_height / canvas_height
+                    mirror_figure.canvas.coords(mirror_figure.id, new_x1, new_y1, new_x2, new_y2, new_x3, new_y3)
                 else:
-                    mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2)
+                    mirror_figure.canvas.coords(mirror_figure.id, x1, y1, x2, y2, x3, y3)
 
     def update_aspect_ratio(self):
         try:
@@ -136,11 +138,6 @@ class ResizableTriangle:
 
     def set_fill_color(self, color):
         self.canvas.itemconfig(self.id, fill=color)
-
-    def update(self):
-        x1, y1, x2, y2, x3, y3 = self.canvas.coords(self.id)
-        for mirror_triangle in self.mirror_triangle:
-            mirror_triangle.canvas.coords(mirror_triangle.id, x1, y1, x2, y2)
 
     def get_coords(self):
         return self.canvas.coords(self.id)

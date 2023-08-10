@@ -27,7 +27,6 @@ LANGUAGES = globals.LANGUAGES
 COLORS = config.COLORS
 
 toggle_button = globals.aspect_ratio_label
-rectangle = None
 canvas_image = None
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
@@ -175,9 +174,7 @@ def insert_rectangle():
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
             new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + float(entryX.get()),
-                                                                  50 + float(entryY.get()),
-                                                                  fill=color,
-                                                                  width=5)
+                                                                  50 + float(entryY.get()), fill=color, width=5)
             rectangles.append(new_rectangle)
             create_mirror_rectangle(new_rectangle, color)
 
@@ -194,9 +191,7 @@ def insert_oval():
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
             new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + float(entryX.get()),
-                                                         50 + float(entryY.get()),
-                                                         fill=color,
-                                                         width=5)
+                                                         50 + float(entryY.get()), fill=color, width=5)
             ovals.append(new_circle)
 
             globals.last_touched_figure = new_circle
@@ -235,16 +230,19 @@ def add_circle():
     clear_result_label()
     color = get_color()
 
-    CANVAS_WIDTH = canvas.winfo_width()
-    CANVAS_HEIGHT = canvas.winfo_height()
+    canvas_width = canvas.winfo_width()
+    canvas_height = canvas.winfo_height()
 
-    if config.CIRCLE_WIDTH <= CANVAS_WIDTH and config.CIRCLE_HEIGHT <= CANVAS_HEIGHT:
-        new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + config.CIRCLE_WIDTH,
-                                                     50 + config.CIRCLE_HEIGHT, fill=color, width=5)
-    else:
-        new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    center_x, center_y = canvas_width / 2, canvas_height / 2
+    half_circle_width = config.CIRCLE_WIDTH / 2
+    half_circle_height = config.CIRCLE_HEIGHT / 2
+
+    x1, y1 = center_x - half_circle_width, center_y - half_circle_height
+    x2, y2 = center_x + half_circle_width, center_y + half_circle_height
+
+    new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, x2, y2, fill=color, width=5)
+
     ovals.append(new_circle)
-
     globals.last_touched_figure = new_circle
 
 
@@ -252,17 +250,20 @@ def add_rectangle():
     clear_result_label()
     color = get_color()
 
-    CANVAS_WIDTH = canvas.winfo_width()
-    CANVAS_HEIGHT = canvas.winfo_height()
+    canvas_width = canvas.winfo_width()
+    canvas_height = canvas.winfo_height()
 
-    if RECTANGLE_WIDTH <= CANVAS_WIDTH and RECTANGLE_HEIGHT <= CANVAS_HEIGHT:
-        new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + config.RECTANGLE_WIDTH,
-                                                              50 + config.RECTANGLE_HEIGHT, fill=color, width=5)
-    else:
-        new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 200, 200, fill=color, width=5)
+    center_x, center_y = canvas_width / 2, canvas_height / 2
+    half_rectangle_width = config.RECTANGLE_WIDTH / 2
+    half_rectangle_height = config.RECTANGLE_HEIGHT / 2
+
+    x1, y1 = center_x - half_rectangle_width, center_y - half_rectangle_height
+    x2, y2 = center_x + half_rectangle_width, center_y + half_rectangle_height
+
+    new_rectangle = ResizableRectangle.ResizableRectangle(canvas, x1, y1, x2, y2, fill=color, width=5)
+
     rectangles.append(new_rectangle)
     create_mirror_rectangle(new_rectangle, color)
-
     globals.last_touched_figure = new_rectangle
 
 
@@ -270,10 +271,10 @@ def add_triangle():
     clear_result_label()
     color = get_color()
 
-    CANVAS_WIDTH = canvas.winfo_width()
-    CANVAS_HEIGHT = canvas.winfo_height()
+    canvas_width = canvas.winfo_width()
+    canvas_height = canvas.winfo_height()
 
-    center_x, center_y = CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2
+    center_x, center_y = canvas_width / 2, canvas_height / 2
     half_triangle_width = config.TRIANGLE_WIDTH / 2
 
     x1, y1 = center_x - half_triangle_width, center_y + half_triangle_width * math.sqrt(3) / 2
@@ -281,42 +282,63 @@ def add_triangle():
     x3, y3 = center_x, center_y - config.TRIANGLE_WIDTH * math.sqrt(3) / 2
 
     new_triangle = ResizableTriangle.ResizableTriangle(canvas, x1, y1, x2, y2, x3, y3, fill=color, width=5)
-    rectangles.append(new_triangle)
+    triangles.append(new_triangle)
 
-    create_mirror_rectangle(new_triangle, color)
+    create_mirror_triangle(new_triangle, color)
     globals.last_touched_figure = new_triangle
+
+
+def remove_figure():
+    clear_result_label()
+    if rectangles:
+        remove_rectangle()
+    elif triangles:
+        remove_triangle()
+    elif ovals:
+        remove_oval()
+
+
+def remove_rectangle():
+    try:
+        if globals.last_touched_figure is not None:
+            rectangle_to_remove = globals.last_touched_figure
+        else:
+            rectangle_to_remove = rectangles[-1]
+        rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
+        rectangles.remove(rectangle_to_remove)
+
+        for mirror_rectangle in rectangle_to_remove.mirror_figures:
+            mirror_rectangle.canvas.delete(mirror_rectangle.id)
+    except ValueError:
+        pass
+
+
+def remove_triangle():
+    try:
+        if globals.last_touched_figure is not None:
+            triangle_to_remove = globals.last_touched_figure
+        else:
+            triangle_to_remove = triangles[-1]
+        triangle_to_remove.canvas.delete(triangle_to_remove.id)
+        rectangles.remove(triangle_to_remove)
+
+        for mirror_triangle in triangle_to_remove.mirror_figures:
+            mirror_triangle.canvas.delete(mirror_triangle.id)
+    except ValueError:
+        pass
 
 
 def remove_oval():
     clear_result_label()
-    if ovals:
-        try:
-            if globals.last_touched_figure is not None:
-                oval_to_remove = globals.last_touched_figure
-            else:
-                oval_to_remove = ovals[-1]
-            oval_to_remove.canvas.delete(oval_to_remove.id)
-            ovals.remove(oval_to_remove)
-        except ValueError:
-            pass
-
-
-def remove_rectangle():
-    if rectangles:
-        try:
-            if globals.last_touched_figure is not None:
-                rectangle_to_remove = globals.last_touched_figure
-            else:
-                rectangle_to_remove = rectangles[-1]
-            rectangle_to_remove.canvas.delete(rectangle_to_remove.id)
-            rectangles.remove(rectangle_to_remove)
-
-            for mirror_rectangle in rectangle_to_remove.mirror_figures:
-                mirror_rectangle.canvas.delete(mirror_rectangle.id)
-        except ValueError:
-            pass
-    else:
-        remove_oval()
+    try:
+        if globals.last_touched_figure is not None:
+            oval_to_remove = globals.last_touched_figure
+        else:
+            oval_to_remove = ovals[-1]
+        oval_to_remove.canvas.delete(oval_to_remove.id)
+        ovals.remove(oval_to_remove)
+    except ValueError:
+        pass
 
 
 def change_color(value):
@@ -356,9 +378,10 @@ def create_mirror_window():
         rectangle.mirror_figures.append(mirror_rectangle)
 
     for triangle in triangles:
-        x1, y1, x2, y2 = canvas.coords(triangle.id)
+        x1, y1, x2, y2, x3, y3 = canvas.coords(triangle.id)
         color = canvas.itemcget(triangle.id, "fill")
-        mirror_triangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        mirror_triangle = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, x3, y3, fill=color,
+                                                              width=5)
         triangle.mirror_figures.append(mirror_triangle)
 
     for oval in ovals:
@@ -372,11 +395,19 @@ def create_mirror_window():
 def create_mirror_rectangle(new_rectangle, color):
     if globals.mirror_window and globals.mirror_window.winfo_exists():
         mirror_canvas = globals.mirror_window.winfo_children()[0]
-        x = int(entryX.get()) if entryX.get() else config.RECTANGLE_WIDTH
-        y = int(entryY.get()) if entryY.get() else config.RECTANGLE_HEIGHT
-        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, 50, 50, 50 + x, 50 + y, fill=color,
+        x1, y1, x2, y2 = canvas.coords(new_rectangle.id)
+        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color,
                                                                  width=5)
         new_rectangle.mirror_figures.append(mirror_rectangle)
+
+
+def create_mirror_triangle(new_triangle, color):
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
+        mirror_canvas = globals.mirror_window.winfo_children()[0]
+        x1, y1, x2, y2, x3, y3 = canvas.coords(new_triangle.id)
+        mirror_triangle = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, x3, y3, fill=color,
+                                                              width=5)
+        new_triangle.mirror_figures.append(mirror_triangle)
 
 
 def load_canvas_image(canvas, root):
@@ -404,11 +435,23 @@ def delete_canvas_image():
         update_label(result_label, translations["err_load_img"], "red")
 
 
+def update_figures():
+    for rectangle in rectangles:
+        rectangle.update_mirror_figures()
+
+    for triangle in triangles:
+        triangle.update_mirror_figures()
+
+    for oval in ovals:
+        oval.update_mirror_figures()
+
+
 def toggle_bt():
     if not globals.ENABLE_RELATIVE_POSITION:
         globals.ENABLE_RELATIVE_POSITION = True
     else:
         globals.ENABLE_RELATIVE_POSITION = False
+    update_figures()
 
 
 # ########################################## UI ###########################################
@@ -544,7 +587,7 @@ add_circle_bt = tk.Button(button_frame, text=translations["add_oval"], command=a
                           width=config.BT_WIDTH)
 add_circle_bt.grid(row=0, column=3, padx=config.PADX)
 
-remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command=remove_rectangle, bg='#F37D70',
+remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command=remove_figure, bg='#F37D70',
                              height=config.BT_HEIGHT,
                              width=config.BT_WIDTH)
 remove_figure_bt.grid(row=0, column=4, padx=config.PADX)

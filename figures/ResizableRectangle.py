@@ -124,10 +124,5 @@ class ResizableRectangle:
     def set_fill_color(self, color):
         self.canvas.itemconfig(self.id, fill=color)
 
-    def update(self):
-        x1, y1, x2, y2 = self.canvas.coords(self.id)
-        for mirror_rectangle in self.mirror_rectangles:
-            mirror_rectangle.canvas.coords(mirror_rectangle.id, x1, y1, x2, y2)
-
     def get_coords(self):
         return self.canvas.coords(self.id)
