@@ -211,6 +211,7 @@ def calculate_remaining_value():
     try:
         aspect_ratio = entry_ratio.get().split(":")
         if aspect_ratio[0].isdigit() and aspect_ratio[1].isdigit():
+            clear_result_label()
             aspect_ratio = [int(i) for i in aspect_ratio]
             if entryX.get():
                 x = float(entryX.get())

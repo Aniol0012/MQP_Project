@@ -14,7 +14,7 @@ CONFIG_LABELS = {
     "CANVAS_WIDTH": "Ancho del lienzo",
     "CANVAS_HEIGHT": "Alto del lienzo",
     "ENABLE_ASPECT_RATIO_INPUT": "Habilitar entrada de relación de aspecto",
-    "ENABLE_CANVAS_LIMIT": "Habilitar límite de lienzo",
+    "ENABLE_CANVAS_LIMIT": "Prohibir que las figuras se salgan del canvas",
     "BACKGROUND_COLOR": "Color de fondo"
 }
 

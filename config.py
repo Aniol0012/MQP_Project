@@ -28,7 +28,7 @@ CIRCLE_HEIGHT = 150  # Default 150
 TRIANGLE_WIDTH = 150  # Default: 150
 TRIANGLE_HEIGHT = 150  # Default 150
 
-# Añadir una relacion de aspecto debajo de los cuadrados
+# Habilitar entrada de relación de aspecto
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 
 # Mostrar botón para modificar la configuración
