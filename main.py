@@ -15,10 +15,10 @@ import pickle
 import config
 import auxi
 import globals
-import movment
+from utils import config_menu
 
 # TODO: Ventana para modificar la configuración
-# TODO: Fixar bug triangulo en la ventana espejo
+# TODO: Fixar bug triángulo en la ventana espejo
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -344,7 +344,7 @@ def create_mirror_window():
     globals.mirror_window.geometry(f'+{root.winfo_screenwidth() * config.SCREEN_TO_OPEN_MIRROR}+0')
 
     mirror_canvas = tk.Canvas(globals.mirror_window, width=root.winfo_screenwidth(), height=root.winfo_screenheight(),
-                              bg='light grey')
+                              bg=config.CANVAS_BACKGROUND_COLOR)
     mirror_canvas.pack(anchor='nw')
 
     for rectangle in rectangles:
@@ -432,7 +432,7 @@ else:
 logo_image = Image.open(logo_image_path)
 photo = ImageTk.PhotoImage(logo_image)
 
-logo_label = tk.Label(root, image=photo, bg=config.LABELS_BG)
+logo_label = tk.Label(root, image=photo, bg=config.BACKGROUND_COLOR)
 logo_label.pack(anchor="center")
 
 root.iconbitmap(icon_path)
@@ -445,11 +445,11 @@ dropdown = tk.OptionMenu(root, idioma_seleccionado, *LANGUAGES, command=switch_l
 dropdown.pack(anchor='nw', padx=30)
 
 # Entry X
-label1 = tk.Label(root, text=translations["enter_horizontal"], bg=config.LABELS_BG,
+label1 = tk.Label(root, text=translations["enter_horizontal"], bg=config.BACKGROUND_COLOR,
                   font=config.LABEL_TITLE_FONT)
 label1.pack()
 
-entry_frameX = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+entry_frameX = tk.Frame(root, bg=config.BACKGROUND_COLOR)
 entry_frameX.pack()
 
 entryX = tk.Entry(entry_frameX, bd=2, width=30)
@@ -459,10 +459,10 @@ copy_buttonX = tk.Button(entry_frameX, text=translations["copy"], command=lambda
 copy_buttonX.pack(side='left')
 
 # Entry Y
-label2 = tk.Label(root, text=translations["enter_vertical"], bg=config.LABELS_BG, font=config.LABEL_TITLE_FONT)
+label2 = tk.Label(root, text=translations["enter_vertical"], bg=config.BACKGROUND_COLOR, font=config.LABEL_TITLE_FONT)
 label2.pack()
 
-entry_frameY = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+entry_frameY = tk.Frame(root, bg=config.BACKGROUND_COLOR)
 entry_frameY.pack()
 
 entryY = tk.Entry(entry_frameY, bd=2, width=30)
@@ -472,7 +472,7 @@ copy_buttonY = tk.Button(entry_frameY, text=translations["copy"], command=lambda
 copy_buttonY.pack(side='left')
 
 # Frame for buttons
-button_frame = tk.Frame(root, bg='light grey')
+button_frame = tk.Frame(root, bg=config.BACKGROUND_COLOR)
 button_frame.pack(pady=10)
 
 clear_button = tk.Button(button_frame, text=translations["clear"], command=clear, bg='orange', height=config.BT_HEIGHT,
@@ -494,15 +494,15 @@ insert_oval_bt = tk.Button(button_frame, text=translations["insert_oval"], comma
                            width=config.BT_WIDTH)
 insert_oval_bt.grid(row=0, column=3, padx=config.PADX)
 
-result_label = tk.Label(root, text="", bg=config.LABELS_BG, font=('Helvetica', '14'))
+result_label = tk.Label(root, text="", bg=config.BACKGROUND_COLOR, font=('Helvetica', '14'))
 result_label.pack()
 
 if config.ENABLE_ASPECT_RATIO_INPUT:
-    labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg=config.LABELS_BG,
+    labelRatio = tk.Label(root, text=translations["intr_aspect_ratio"], bg=config.BACKGROUND_COLOR,
                           font=config.LABEL_TITLE_FONT)
     labelRatio.pack()
 
-    entry_frameRatio = tk.Frame(root, bg=config.CANVAS_BACKGROUND_COLOR)
+    entry_frameRatio = tk.Frame(root, bg=config.BACKGROUND_COLOR)
     entry_frameRatio.pack()
 
     entry_ratio = tk.Entry(entry_frameRatio, bd=2, width=30)
@@ -527,7 +527,7 @@ selected_color = tk.StringVar(root)
 selected_color.set(next(iter(COLORS)))
 
 # Marco para los botones y el desplegable
-button_frame = tk.Frame(root, bg='light grey')
+button_frame = tk.Frame(root, bg=config.BACKGROUND_COLOR)
 button_frame.pack(anchor='nw', padx=30, pady=10)
 
 color_dropdown = tk.OptionMenu(button_frame, selected_color, *COLORS.keys(), command=change_color)
@@ -613,10 +613,9 @@ canvas.pack()
 mirror_bt = tk.Button(root, text=translations["create_mirror_window"], command=create_mirror_window)
 mirror_bt.pack()
 
-globals.aspect_ratio_label = tk.Label(root, text="", bg=config.LABELS_BG)
+globals.aspect_ratio_label = tk.Label(root, text="", bg=config.BACKGROUND_COLOR)
 globals.aspect_ratio_label.pack()
 
-root.focus_set()
 
 
 def disable_entries(event):
@@ -636,13 +635,7 @@ def enable_entries(event):
 canvas.bind("<Enter>", disable_entries)
 canvas.bind("<Leave>", enable_entries)
 
-root.bind('w', movment.move_up)
-root.bind('s', movment.move_down)
-root.bind('a', movment.move_left)
-root.bind('d', movment.move_right)
-root.bind('r', movment.increase)
-root.bind('f', movment.decrease)
-
+root.focus_set()
 
 def get_state():
     state = {
@@ -705,6 +698,17 @@ def open_folder():
         update_label(result_label, translations["err_folder"] + e, "red")
 
 
+def update_configurations():
+    """Actualiza las configuraciones en tiempo real."""
+    # Cargar la configuración desde el archivo
+    with open("config.pkl", "rb") as f:
+        saved_config = pickle.load(f)
+
+    # Actualizar las variables en main.py
+    for key, value in saved_config.items():
+        setattr(config, key, value)
+
+
 save_bt = tk.Button(root, text=translations["save_bt"], command=save_state, fg="green")
 save_bt.place(relx=0.97, rely=0.1, anchor="ne", width=110)
 
@@ -716,5 +720,10 @@ delete_bt.place(relx=0.97, rely=0.16, anchor="ne", width=110)
 
 open_folder_bt = tk.Button(root, text=translations["open_folder_bt"], command=open_folder, fg="orange")
 open_folder_bt.place(relx=0.97, rely=0.19, anchor="ne", width=110)
+
+if config.ENABLE_CONFIGURATION_BT:
+    config_bt = tk.Button(root, text="Configuración", command=lambda: config_menu.show_config(root, update_configurations),
+                          fg="gray")
+    config_bt.place(relx=0.97, rely=0.22, anchor="ne", width=110)
 
 root.mainloop()

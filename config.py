@@ -1,8 +1,16 @@
 # Archivo de configuración
 
+# Abrir la ventana maximizada
+MAXIMIZED_WINDOW = True  # Default: True
+
 # Dimensiones de la ventana
+# Estos campos solo tendrán efecto si la configuración anterior está en False
 WINDOW_WIDTH = 800  # Default: 800
 WINDOW_HEIGHT = 1000  # Default: 900
+
+# Dimensiones de la ventana de configuración
+CONFIG_WINDOW_WIDTH = 800  # Default: 800
+CONFIG_WINDOW_HEIGHT = 800  # Default: 800
 
 # Dimensiones del canvas
 CANVAS_WIDTH = 700  # Default: 700 (Si esta activado MAXIMIZED_WINDOW este parámetro no tendra ningún efecto)
@@ -20,11 +28,11 @@ CIRCLE_HEIGHT = 150  # Default 150
 TRIANGLE_WIDTH = 150  # Default: 150
 TRIANGLE_HEIGHT = 150  # Default 150
 
-# Abrir la ventana maximizada
-MAXIMIZED_WINDOW = True  # Default: True
-
 # Añadir una relacion de aspecto debajo de los cuadrados
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
+
+# Mostrar botón para modificar la configuración
+ENABLE_CONFIGURATION_BT = True  # Default: True
 
 # Prohibir que las figuras se salgan del canvas
 ENABLE_CANVAS_LIMIT = True  # Default: True
@@ -56,8 +64,6 @@ FILE_NAME = "proyectoMQP.pkl"  # Default: "proyectoMQP.pkl"
 
 # Color del fondo de pantalla
 BACKGROUND_COLOR = "light grey"  # Default: "light grey"
-
-LABELS_BG = BACKGROUND_COLOR  # Default: "light grey"
 
 # Fuente de los títulos de los labels
 LABEL_TITLE_FONT = ('Helvetica', '14', 'bold')

@@ -21,6 +21,8 @@ aspect_ratio_label = None
 
 mirror_window = None
 
+config_window = None
+
 fraction_str = None
 
 ap_result = None
