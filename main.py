@@ -133,7 +133,7 @@ def clear():
     entryY.delete(0, tk.END)
     if config.ENABLE_ASPECT_RATIO_INPUT:
         entry_ratio.delete(0, tk.END)
-    if not globals.mirror_window.winfo_exists():
+    if toggle_button:
         toggle_button.grid_forget()
     remove_figures()
     clear_mirror_canvas()
