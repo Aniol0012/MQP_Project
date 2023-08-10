@@ -39,15 +39,3 @@ Con la ejecución de este script se creará una carpeta llamada executables en d
    python3 main.py
    ```
 
-## TECLAS
-
-Para mover las figuras, usa las siguientes teclas:
-
-- `W` Para mover hacia arriba
-- `A` Para mover hacia la izquierda
-- `S` Para mover hacia abajo
-- `D` Para mover hacia la derecha
-- `R` Para agrandar
-- `F` Para encoger
-
-
