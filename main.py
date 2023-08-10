@@ -99,6 +99,7 @@ load_translations(globals.language)
 
 
 def calculate_aspect_ratio():
+    """Calculates the aspect ratio from user inputs and displays the result or an error message."""
     try:
         num1 = float(entryX.get())
         num2 = float(entryY.get())
@@ -121,6 +122,7 @@ circles = []
 
 
 def clear():
+    """Clears all input fields, removes drawn figures, and resets the mirror canvas and result label."""
     entryX.delete(0, tk.END)
     entryY.delete(0, tk.END)
     if entry_ratio.winfo_exists():
@@ -131,11 +133,13 @@ def clear():
 
 
 def clear_canvas():
+    """Removes all figures from the canvas and clears the mirror canvas."""
     remove_figures()
     clear_mirror_canvas()
 
 
 def get_color():
+    """Returns a color for a figure, either randomly chosen or based on user selection."""
     if config.RANDOM_COLOR:
         return random.choice(list(COLORS.values()))
     else:
@@ -143,6 +147,7 @@ def get_color():
 
 
 def remove_figures():
+    """Removes all figures (rectangles, triangles, circles) from the canvas."""
     try:
         for rectangle in rectangles.copy():
             rectangle.canvas.delete(rectangle.id)
@@ -162,6 +167,7 @@ def remove_figures():
 
 
 def clear_mirror_canvas():
+    """Clears all figures from the mirror canvas."""
     if globals.mirror_window and globals.mirror_window.winfo_exists():
         mirror_canvas = globals.mirror_window.winfo_children()[0]
         mirror_canvas.delete("all")
@@ -169,10 +175,12 @@ def clear_mirror_canvas():
 
 
 def concatenate_canvas_wh():
+    """Returns a string representing the maximum dimensions of the canvas."""
     return " (max: " + str(canvas.winfo_width()) + "x" + str(canvas.winfo_height()) + ")"
 
 
 def insert_rectangle():
+    """Inserts a rectangle onto the canvas based on user-defined dimensions or displays an error."""
     color = get_color()
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
@@ -191,6 +199,7 @@ def insert_rectangle():
 
 
 def insert_oval():
+    """Inserts an oval onto the canvas based on user-defined dimensions or displays an error."""
     color = get_color()
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
@@ -209,6 +218,7 @@ def insert_oval():
 
 
 def calculate_remaining_value():
+    """Computes the missing value based on the provided aspect ratio and displays an error if invalid."""
     try:
         aspect_ratio = entry_ratio.get().split(":")
         if aspect_ratio[0].isdigit() and aspect_ratio[1].isdigit():
