@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
+from utils import config_menu, globals, auxi
 from figures import ResizableRectangle
 from figures import ResizableTriangle
 from figures import ResizableCircle
@@ -8,14 +9,11 @@ from figures import ResizableCanvas
 import os
 import sys
 import fractions
-import math
 import random
 import importlib
 import pickle
 import config
-from utils import config_menu, globals, auxi
 
-# TODO: Fixar bug triángulo en la ventana espejo
 
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
@@ -179,10 +177,11 @@ def insert_rectangle():
     color = get_color()
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
-            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, 50, 50, 50 + float(entryX.get()),
+            x1, y1 = auxi.get_coords_figure(canvas, "rectangle", "1")
+            new_rectangle = ResizableRectangle.ResizableRectangle(canvas, x1, y1, 50 + float(entryX.get()),
                                                                   50 + float(entryY.get()), fill=color, width=5)
             rectangles.append(new_rectangle)
-            create_mirror_rectangle(new_rectangle, color)
+            create_mirror_figure(new_rectangle, color)
 
             globals.last_touched_figure = new_rectangle
             clear_result_label()
@@ -196,10 +195,11 @@ def insert_oval():
     color = get_color()
     try:
         if float(entryX.get()) <= canvas.winfo_width() and float(entryY.get()) <= canvas.winfo_height():
-            new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + float(entryX.get()),
+            x1, y1 = auxi.get_coords_figure(canvas, "circle", "1")
+            new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, 50 + float(entryX.get()),
                                                          50 + float(entryY.get()), fill=color, width=5)
             ovals.append(new_circle)
-            create_mirror_circle(new_circle, color)
+            create_mirror_figure(new_circle, color)
 
             globals.last_touched_figure = new_circle
             clear_result_label()
@@ -237,20 +237,13 @@ def add_circle():
     clear_result_label()
     color = get_color()
 
-    canvas_width = canvas.winfo_width()
-    canvas_height = canvas.winfo_height()
-
-    center_x, center_y = canvas_width / 2, canvas_height / 2
-    half_circle_width = config.CIRCLE_WIDTH / 2
-    half_circle_height = config.CIRCLE_HEIGHT / 2
-
-    x1, y1 = center_x - half_circle_width, center_y - half_circle_height
-    x2, y2 = center_x + half_circle_width, center_y + half_circle_height
+    x1, y1 = auxi.get_coords_figure(canvas, "circle", "1")
+    x2, y2 = auxi.get_coords_figure(canvas, "circle", "2")
 
     new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, x2, y2, fill=color, width=5)
 
     ovals.append(new_circle)
-    create_mirror_circle(new_circle, color)
+    create_mirror_figure(new_circle, color)
     globals.last_touched_figure = new_circle
 
 
@@ -258,20 +251,13 @@ def add_rectangle():
     clear_result_label()
     color = get_color()
 
-    canvas_width = canvas.winfo_width()
-    canvas_height = canvas.winfo_height()
-
-    center_x, center_y = canvas_width / 2, canvas_height / 2
-    half_rectangle_width = config.RECTANGLE_WIDTH / 2
-    half_rectangle_height = config.RECTANGLE_HEIGHT / 2
-
-    x1, y1 = center_x - half_rectangle_width, center_y - half_rectangle_height
-    x2, y2 = center_x + half_rectangle_width, center_y + half_rectangle_height
+    x1, y1 = auxi.get_coords_figure(canvas, "rectangle", "1")
+    x2, y2 = auxi.get_coords_figure(canvas, "rectangle", "2")
 
     new_rectangle = ResizableRectangle.ResizableRectangle(canvas, x1, y1, x2, y2, fill=color, width=5)
 
     rectangles.append(new_rectangle)
-    create_mirror_rectangle(new_rectangle, color)
+    create_mirror_figure(new_rectangle, color)
     globals.last_touched_figure = new_rectangle
 
 
@@ -279,20 +265,14 @@ def add_triangle():
     clear_result_label()
     color = get_color()
 
-    canvas_width = canvas.winfo_width()
-    canvas_height = canvas.winfo_height()
-
-    center_x, center_y = canvas_width / 2, canvas_height / 2
-    half_triangle_width = config.TRIANGLE_WIDTH / 2
-
-    x1, y1 = center_x - half_triangle_width, center_y + half_triangle_width * math.sqrt(3) / 2
-    x2, y2 = center_x + half_triangle_width, center_y + half_triangle_width * math.sqrt(3) / 2
-    x3, y3 = center_x, center_y - config.TRIANGLE_WIDTH * math.sqrt(3) / 2
+    x1, y1 = auxi.get_coords_figure(canvas, "triangle", "1")
+    x2, y2 = auxi.get_coords_figure(canvas, "triangle", "2")
+    x3, y3 = auxi.get_coords_figure(canvas, "triangle", "3")
 
     new_triangle = ResizableTriangle.ResizableTriangle(canvas, x1, y1, x2, y2, x3, y3, fill=color, width=5)
     triangles.append(new_triangle)
 
-    create_mirror_triangle(new_triangle, color)
+    create_mirror_figure(new_triangle, color)
     globals.last_touched_figure = new_triangle
 
 
@@ -371,31 +351,24 @@ def create_mirror_window():
     create_toggle()
 
 
-def create_mirror_rectangle(new_rectangle, color):
+def create_mirror_figure(new_figure, color):
+    """Replica la figura que se acaba de crear en la pantalla espejo en caso de que exista."""
     if globals.mirror_window and globals.mirror_window.winfo_exists():
         mirror_canvas = globals.mirror_window.winfo_children()[0]
-        x1, y1, x2, y2 = canvas.coords(new_rectangle.id)
-        mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color,
-                                                                 width=5)
-        new_rectangle.mirror_figures.append(mirror_rectangle)
-
-
-def create_mirror_circle(new_circle, color):
-    if globals.mirror_window and globals.mirror_window.winfo_exists():
-        mirror_canvas = globals.mirror_window.winfo_children()[0]
-        x1, y1, x2, y2 = canvas.coords(new_circle.id)
-        mirror_rectangle = ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color,
-                                                           width=5)
-        new_circle.mirror_figures.append(mirror_rectangle)
-
-
-def create_mirror_triangle(new_triangle, color):
-    if globals.mirror_window and globals.mirror_window.winfo_exists():
-        mirror_canvas = globals.mirror_window.winfo_children()[0]
-        x1, y1, x2, y2, x3, y3 = canvas.coords(new_triangle.id)
-        mirror_triangle = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, x3, y3, fill=color,
-                                                              width=5)
-        new_triangle.mirror_figures.append(mirror_triangle)
+        mirror_figure = None
+        if isinstance(new_figure, ResizableRectangle.ResizableRectangle):
+            x1, y1, x2, y2 = canvas.coords(new_figure.id)
+            mirror_figure = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        elif isinstance(new_figure, ResizableTriangle.ResizableTriangle):
+            x1, y1, x2, y2, x3, y3 = canvas.coords(new_figure.id)
+            mirror_figure = ResizableTriangle.ResizableTriangle(mirror_canvas, x1, y1, x2, y2, x3, y3, fill=color,
+                                                                width=5)
+        elif isinstance(new_figure, ResizableCircle.ResizableCircle):
+            x1, y1, x2, y2 = canvas.coords(new_figure.id)
+            mirror_figure = ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
+        else:
+            print("No se ha podido crear la figura en la pantalla espejo")
+        new_figure.mirror_figures.append(mirror_figure)
 
 
 def load_canvas_image(canvas, root):
