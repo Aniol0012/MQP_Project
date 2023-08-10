@@ -1,4 +1,4 @@
-# MQP_Project [EN]
+# MQP_Project
 Project developed with **Tkinter** for [**MasQueProyectores**](https://masqueproyectores.com) that serves as an **aspect ratio calculator**. It also includes a **canvas** to create custom figures, along with a variety of additional features that are very convenient and useful for the user. Try it now here:
 
 [Download the latest versions here](https://github.com/Aniol0012/MQP_Project/releases)
