@@ -117,10 +117,6 @@ class ResizableRectangle:
         except ValueError:
             pass
 
-    def reset(self):
-        self.canvas.coords(self.id, *self.original_coords)
-        self.update_aspect_ratio()
-
     def set_fill_color(self, color):
         self.canvas.itemconfig(self.id, fill=color)
 

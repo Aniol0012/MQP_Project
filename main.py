@@ -199,6 +199,7 @@ def insert_oval():
             new_circle = ResizableCircle.ResizableCircle(canvas, 50, 50, 50 + float(entryX.get()),
                                                          50 + float(entryY.get()), fill=color, width=5)
             ovals.append(new_circle)
+            create_mirror_circle(new_circle, color)
 
             globals.last_touched_figure = new_circle
             clear_result_label()
@@ -249,6 +250,7 @@ def add_circle():
     new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, x2, y2, fill=color, width=5)
 
     ovals.append(new_circle)
+    create_mirror_circle(new_circle, color)
     globals.last_touched_figure = new_circle
 
 
@@ -376,6 +378,15 @@ def create_mirror_rectangle(new_rectangle, color):
         mirror_rectangle = ResizableRectangle.ResizableRectangle(mirror_canvas, x1, y1, x2, y2, fill=color,
                                                                  width=5)
         new_rectangle.mirror_figures.append(mirror_rectangle)
+
+
+def create_mirror_circle(new_circle, color):
+    if globals.mirror_window and globals.mirror_window.winfo_exists():
+        mirror_canvas = globals.mirror_window.winfo_children()[0]
+        x1, y1, x2, y2 = canvas.coords(new_circle.id)
+        mirror_rectangle = ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color,
+                                                           width=5)
+        new_circle.mirror_figures.append(mirror_rectangle)
 
 
 def create_mirror_triangle(new_triangle, color):
@@ -592,12 +603,10 @@ def set_canvas_size():
             update_label(result_label, translations["err_canvas_resize_window"], 'red')
         else:
             clear_result_label()
-            CANVAS_WIDTH = canvas_resolution_w
-            CANVAS_HEIGHT = canvas_resolution_h
 
             canvas.destroy()
-
-            canvas = ResizableCanvas.ResizableCanvas(canvas_frame, width=CANVAS_WIDTH, height=CANVAS_HEIGHT,
+            canvas = ResizableCanvas.ResizableCanvas(canvas_frame, width=canvas_resolution_w,
+                                                     height=canvas_resolution_h,
                                                      bg=config.CANVAS_BACKGROUND_COLOR)
             canvas.pack()
 
