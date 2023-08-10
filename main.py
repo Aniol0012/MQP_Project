@@ -13,11 +13,8 @@ import random
 import importlib
 import pickle
 import config
-import auxi
-import globals
-from utils import config_menu
+from utils import config_menu, globals, auxi
 
-# TODO: Ventana para modificar la configuración
 # TODO: Fixar bug triángulo en la ventana espejo
 
 WINDOW_WIDTH = config.WINDOW_WIDTH

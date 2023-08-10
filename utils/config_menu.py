@@ -1,7 +1,6 @@
 import tkinter as tk
-import auxi
 import config
-import globals
+from utils import globals, auxi
 import pickle
 
 

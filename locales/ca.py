@@ -1,5 +1,5 @@
 import config
-import globals
+from utils import globals
 
 translations = {
     "title": "Calculadora de relació d'aspecte",

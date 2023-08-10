@@ -1,5 +1,5 @@
 import pyperclip
-import globals
+from utils import globals
 
 
 def center_window(root, width, height):

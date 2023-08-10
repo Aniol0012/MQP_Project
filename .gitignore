@@ -9,4 +9,6 @@ build
 main.spec
 output
 *.pkl
-executables/
+executables/latest
+executables/old
+executables/stable

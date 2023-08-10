@@ -1,6 +1,5 @@
 import fractions
-import auxi
-import globals
+from utils import globals, auxi
 import config
 
 

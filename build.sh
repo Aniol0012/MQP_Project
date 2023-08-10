@@ -54,7 +54,8 @@ if [ ! -d "executables/old" ]; then
     mkdir -p executables/old
 fi
 
-pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.ico" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons;icons/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/figures;figures/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/locales;locales/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/auxi.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/config.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/globals.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/movment.py;." "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/main.py"
+# pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons/mqp.ico" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/icons;icons/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/figures;figures/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/locales;locales/" --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/utils/auxi.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/utils/config_menu.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/utils/globals.py;." --add-data "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/config.py;." "C:/Users/aniol/OneDrive/Escriptori/Githubs/MQP_Project/main.py"
+pyinstaller --noconfirm --onefile --windowed --icon "./icons/mqp.ico" --add-data "./icons;icons/" --add-data "./figures;figures/" --add-data "./locales;locales/" --add-data "./utils/auxi.py;." --add-data "./utils/config_menu.py;." --add-data "./utils/globals.py;." --add-data "./config.py;." "./main.py"
 
 mv executables/latest/* executables/old
 

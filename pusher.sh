@@ -11,7 +11,7 @@ sed -i 's/SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la prim
 
 # Git operations
 git add .
-git commit -m "$1"
+git commit -m "v$1"
 git push
 
 sed -i 's/SCREEN_TO_OPEN_ROOT = 0  # 1 Para la segunda pantalla y 0 para la primera/SCREEN_TO_OPEN_ROOT = 1  # 1 Para la segunda pantalla y 0 para la primera/g' config.py
