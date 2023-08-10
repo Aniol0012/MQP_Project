@@ -17,10 +17,6 @@ git push
 # Switch to the EN branch or create it if it doesn't exist
 git checkout -b EN || git checkout EN
 
-# Remove the files you don't want to copy to the EN branch
-git rm --cached config.py
-git rm --cached README.md
-
 # Copy all changes from main branch excluding what's in .gitignore
 git checkout main -- .
 
