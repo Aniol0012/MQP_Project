@@ -90,6 +90,7 @@ def update_language():
     update_label(mirror_bt, translations["create_mirror_window"])
     update_label(copy_buttonX, translations["copy"])
     update_label(copy_buttonY, translations["copy"])
+    update_label(copy_button_ratio, translations["copy"])
     update_label(load_canvas_img_bt, translations["load_img"])
     update_label(remove_canvas_img_bt, translations["remove_img"])
     update_label(set_canvas_size_bt, translations["set_canvas_size"])
@@ -634,15 +635,17 @@ globals.aspect_ratio_label.pack()
 
 
 def disable_entries(event):
-    entryX.config(state='disabled')
-    entryY.config(state='disabled')
+    if config.ENABLE_ASPECT_RATIO_CALCULATOR:
+        entryX.config(state='disabled')
+        entryY.config(state='disabled')
     if config.ENABLE_ASPECT_RATIO_INPUT:
         entry_ratio.config(state='disabled')
 
 
 def enable_entries(event):
-    entryX.config(state='normal')
-    entryY.config(state='normal')
+    if config.ENABLE_ASPECT_RATIO_CALCULATOR:
+        entryX.config(state='normal')
+        entryY.config(state='normal')
     if config.ENABLE_ASPECT_RATIO_INPUT:
         entry_ratio.config(state='normal')
 
@@ -742,5 +745,18 @@ if config.ENABLE_CONFIGURATION_BT:
                           command=lambda: config_menu.show_config(root, update_configurations),
                           fg="gray")
     config_bt.place(relx=0.97, rely=0.22, anchor="ne", width=110)
+
+if not config.ENABLE_ASPECT_RATIO_CALCULATOR:
+    label1.destroy()
+    label2.destroy()
+    entryX.destroy()
+    entryY.destroy()
+    copy_buttonX.destroy()
+    copy_buttonY.destroy()
+    entry_frameY.destroy()
+    clear_button.destroy()
+    calculate_bt.destroy()
+    insert_rectangle_bt.destroy()
+    insert_oval_bt.destroy()
 
 root.mainloop()
