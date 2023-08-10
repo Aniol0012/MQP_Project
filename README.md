@@ -1,32 +1,33 @@
 # MQP_Project
-Proyecto hecho con **Tkinter** para [**MasQueProyectores**](https://masqueproyectores.com) que sirve como **calculadora de relaciones de aspecto**. También incluye un **canvas** para poder crear figuras personalizadas junto con una variedad de funcionalidades extra que resultan muy cómodas y útiles para el usuario. Pruébala ya aquí:
+Project developed with **Tkinter** for [**MasQueProyectores**](https://masqueproyectores.com) that serves as an **aspect ratio calculator**. It also includes a **canvas** to create custom figures, along with a variety of additional features that are very convenient and useful for the user. Try it now here:
 
-[Descarga las últimas versiones aquí](https://github.com/Aniol0012/MQP_Project/releases)
+[Download the latest versions here](https://github.com/Aniol0012/MQP_Project/releases)
 
-## Previsualización
+## Preview
 **V9.5**
-![Previsualización](preview/preview_v9.png)
+![Preview](preview/preview_v9.png)
 
-## Instrucciones para crear el ejecutable
+## Instructions to create the executable
 
-Para crear el ejecutable de este programa para sistemas Windows se puede usar la herramienta ya incluida en los ficheros del proyecto llamada [build.sh](https://github.com/Aniol0012/MQP_Project/blob/main/build.sh).
+To create the executable file of this program for Windows systems, you can use the tool included in the project files called [build.sh](https://github.com/Aniol0012/MQP_Project/blob/main/build.sh).
 
-**Uso:**
+**Usage:**
+
 ```
-./build.sh [-s] <versión>
+./build.sh [-s] <version>
 ```
 
-Con la ejecución de este script se creará una carpeta llamada executables en donde estaran todas las versiones ejecutadas.
+By running this script, a folder named "executables" will be created where all the generated versions will be stored.
 
-## Instrucciones de ejecución manual
+## Manual execution instructions
 
-1. **Abrir una terminal (powershell, cmd, bash...) y copiar el repositorio:**
+1. **Open a terminal (powershell, cmd, bash...) and clone the repository:**
     ```sh 
     git clone https://github.com/Aniol0012/MQP_Project.git
     ```
-    o descargar manualmente el fichero.
+    or manually download the file.
 
-2. **Instalar dependencias:**
+2. **Install dependencies:**
    ```
    pip install tkinter
    ```
@@ -34,7 +35,7 @@ Con la ejecución de este script se creará una carpeta llamada executables en d
    pip install pillow
    ```
 
-3. **Dentro del directorio ejecutar la aplicación:**
+3. **Within the directory, run the application:**
    ```sh
    python3 main.py
    ```
