@@ -32,7 +32,7 @@ TRIANGLE_HEIGHT = 150  # Default 150
 ENABLE_ASPECT_RATIO_INPUT = True  # Default: True
 
 # Mostrar botón para modificar la configuración
-ENABLE_CONFIGURATION_BT = True  # Default: True
+ENABLE_CONFIGURATION_BT = False  # Default: True
 
 # Prohibir que las figuras se salgan del canvas
 ENABLE_CANVAS_LIMIT = True  # Default: True

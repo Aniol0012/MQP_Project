@@ -14,7 +14,6 @@ import importlib
 import pickle
 import config
 
-
 WINDOW_WIDTH = config.WINDOW_WIDTH
 WINDOW_HEIGHT = config.WINDOW_HEIGHT
 CANVAS_WIDTH = config.CANVAS_WIDTH
@@ -118,7 +117,7 @@ def calculate_aspect_ratio():
 
 rectangles = []
 triangles = []
-ovals = []
+circles = []
 
 
 def clear():
@@ -153,9 +152,9 @@ def remove_figures():
             triangle.canvas.delete(triangle.id)
             triangles.remove(triangle)
 
-        for oval in ovals.copy():
-            oval.canvas.delete(oval.id)
-            ovals.remove(oval)
+        for circle in circles.copy():
+            circle.canvas.delete(circle.id)
+            circles.remove(circle)
 
         globals.last_touched_figure = None
     except ValueError:
@@ -198,7 +197,7 @@ def insert_oval():
             x1, y1 = auxi.get_coords_figure(canvas, "circle", "1")
             new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, 50 + float(entryX.get()),
                                                          50 + float(entryY.get()), fill=color, width=5)
-            ovals.append(new_circle)
+            circles.append(new_circle)
             create_mirror_figure(new_circle, color)
 
             globals.last_touched_figure = new_circle
@@ -233,21 +232,8 @@ def calculate_remaining_value():
         update_label(result_label, translations["err_msg"], "red")
 
 
-def add_circle():
-    clear_result_label()
-    color = get_color()
-
-    x1, y1 = auxi.get_coords_figure(canvas, "circle", "1")
-    x2, y2 = auxi.get_coords_figure(canvas, "circle", "2")
-
-    new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, x2, y2, fill=color, width=5)
-
-    ovals.append(new_circle)
-    create_mirror_figure(new_circle, color)
-    globals.last_touched_figure = new_circle
-
-
 def add_rectangle():
+    """Adds a resizable rectangle in canvas."""
     clear_result_label()
     color = get_color()
 
@@ -262,6 +248,7 @@ def add_rectangle():
 
 
 def add_triangle():
+    """Adds a resizable triangle on canvas."""
     clear_result_label()
     color = get_color()
 
@@ -276,7 +263,23 @@ def add_triangle():
     globals.last_touched_figure = new_triangle
 
 
+def add_circle():
+    """Adds a resizable circle in canvas."""
+    clear_result_label()
+    color = get_color()
+
+    x1, y1 = auxi.get_coords_figure(canvas, "circle", "1")
+    x2, y2 = auxi.get_coords_figure(canvas, "circle", "2")
+
+    new_circle = ResizableCircle.ResizableCircle(canvas, x1, y1, x2, y2, fill=color, width=5)
+
+    circles.append(new_circle)
+    create_mirror_figure(new_circle, color)
+    globals.last_touched_figure = new_circle
+
+
 def remove_figure():
+    """Removes the last touched figure in canvas."""
     clear_result_label()
     try:
         if globals.last_touched_figure:
@@ -288,7 +291,7 @@ def remove_figure():
             elif isinstance(figure_to_remove, ResizableTriangle.ResizableTriangle):
                 triangles.remove(figure_to_remove)
             elif isinstance(figure_to_remove, ResizableCircle.ResizableCircle):
-                ovals.remove(figure_to_remove)
+                circles.remove(figure_to_remove)
             else:
                 print("La figura es de un tipo desconocido.")
 
@@ -301,6 +304,7 @@ def remove_figure():
 
 
 def change_color(value):
+    """Changes the color of last touched figure"""
     if globals.last_touched_figure:
         globals.last_touched_figure.set_fill_color(COLORS[value])
 
@@ -311,6 +315,7 @@ def change_color(value):
 
 
 def create_mirror_window():
+    """It creates a mirror canvas in a new window"""
     if globals.mirror_window and globals.mirror_window.winfo_exists():
         globals.mirror_window.destroy()
 
@@ -343,9 +348,9 @@ def create_mirror_window():
                                                               width=5)
         triangle.mirror_figures.append(mirror_triangle)
 
-    for oval in ovals:
-        x1, y1, x2, y2 = canvas.coords(oval.id)
-        color = canvas.itemcget(oval.id, "fill")
+    for circle in circles:
+        x1, y1, x2, y2 = canvas.coords(circle.id)
+        color = canvas.itemcget(circle.id, "fill")
         ResizableCircle.ResizableCircle(mirror_canvas, x1, y1, x2, y2, fill=color, width=5)
 
     create_toggle()
@@ -371,7 +376,8 @@ def create_mirror_figure(new_figure, color):
         new_figure.mirror_figures.append(mirror_figure)
 
 
-def load_canvas_image(canvas, root):
+def load_canvas_image():
+    """Loads a background image for canvas."""
     global canvas_image
     filepath = filedialog.askopenfilename(filetypes=[(translations["img"], "*.png;*.jpg;*.jpeg;*.bmp")])
 
@@ -387,6 +393,7 @@ def load_canvas_image(canvas, root):
 
 
 def delete_canvas_image():
+    """Deletes the background image in canvas"""
     global canvas_image
     if canvas_image is not None:
         canvas.delete(canvas_image)
@@ -396,23 +403,25 @@ def delete_canvas_image():
         update_label(result_label, translations["err_load_img"], "red")
 
 
+def toggle_bt():
+    """Switches the configuration of the canvas relative position on figures"""
+    if not globals.ENABLE_RELATIVE_POSITION:
+        globals.ENABLE_RELATIVE_POSITION = True
+    else:
+        globals.ENABLE_RELATIVE_POSITION = False
+    update_figures()
+
+
 def update_figures():
+    """Updates the figures in canvas on the mirror window."""
     for rectangle in rectangles:
         rectangle.update_mirror_figures()
 
     for triangle in triangles:
         triangle.update_mirror_figures()
 
-    for oval in ovals:
-        oval.update_mirror_figures()
-
-
-def toggle_bt():
-    if not globals.ENABLE_RELATIVE_POSITION:
-        globals.ENABLE_RELATIVE_POSITION = True
-    else:
-        globals.ENABLE_RELATIVE_POSITION = False
-    update_figures()
+    for circle in circles:
+        circle.update_mirror_figures()
 
 
 # ########################################## UI ###########################################
@@ -554,7 +563,7 @@ remove_figure_bt = tk.Button(button_frame, text=translations["del_fig"], command
 remove_figure_bt.grid(row=0, column=4, padx=config.PADX)
 
 load_canvas_img_bt = tk.Button(button_frame, text=translations["load_img"],
-                               command=lambda: load_canvas_image(canvas, root),
+                               command=load_canvas_image,
                                bg='yellow', height=config.BT_HEIGHT, width=config.BT_WIDTH)
 load_canvas_img_bt.grid(row=0, column=5, padx=config.PADX)
 
@@ -637,7 +646,7 @@ root.focus_set()
 def get_state():
     state = {
         "rectangles": [(canvas.coords(rect.id), canvas.itemcget(rect.id, "fill")) for rect in rectangles],
-        "ovals": [(canvas.coords(oval.id), canvas.itemcget(oval.id, "fill")) for oval in ovals],
+        "circles": [(canvas.coords(circle.id), canvas.itemcget(circle.id, "fill")) for circle in circles],
     }
     return state
 
@@ -654,17 +663,17 @@ def import_figures(state):
         canvas.delete(rect.id)
     rectangles.clear()
 
-    for oval in ovals:
-        canvas.delete(oval.id)
-    ovals.clear()
+    for circle in circles:
+        canvas.delete(circle.id)
+    circles.clear()
 
     for coords, color in state["rectangles"]:
         new_rect = ResizableRectangle.ResizableRectangle(canvas, *coords, fill=color, width=5)
         rectangles.append(new_rect)
 
-    for coords, color in state["ovals"]:
+    for coords, color in state["circles"]:
         new_oval = ResizableCircle.ResizableCircle(canvas, *coords, fill=color, width=5)
-        ovals.append(new_oval)
+        circles.append(new_oval)
 
 
 def load_state():
